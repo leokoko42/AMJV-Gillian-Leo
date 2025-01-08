@@ -16,7 +16,7 @@ public class BasicEntity : Entity
 
     public override Behavior GetBehavior()
     {
-        throw new System.NotImplementedException();
+        return this.behavior;
     }
 
     public override int GetCost()
@@ -64,6 +64,11 @@ public class BasicEntity : Entity
         return this.maxMana;
     }
 
+    public override float GetRange()
+    {
+        return this.range;
+    }
+
     public override int GetSpeed()
     {
         return this.speed;
@@ -81,7 +86,7 @@ public class BasicEntity : Entity
 
     public override void SetBehavior(Behavior newBehavior)
     {
-        throw new System.NotImplementedException();
+        this.behavior = newBehavior;
     }
 
     public override void SetCost(int newCost)
@@ -127,6 +132,11 @@ public class BasicEntity : Entity
     public override void SetMaxMana(int newMaxMana)
     {
         this.maxMana = newMaxMana;
+    }
+
+    public override void SetRange(int newRange)
+    {
+        this.range = newRange;
     }
 
     public override void SetSpeed(int newSpeed)

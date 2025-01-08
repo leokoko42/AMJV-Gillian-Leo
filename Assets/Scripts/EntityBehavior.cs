@@ -19,6 +19,7 @@ public class EntityBehavior : MonoBehaviour
         allyEntity = GetComponent<BasicEntity>();
         layerMask = LayerMask.GetMask("Walls");
         isOnCooldown = false;
+
     }
     
     private (GameObject,float) getClosestEnemy() {
