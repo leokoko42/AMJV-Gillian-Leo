@@ -17,7 +17,7 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected int maxMana;
     [SerializeField] protected int cost;
 
-    public abstract bool GetIsActive(); // Récupère si un personnage est actif ou pas sur la carte (ie il fait rien ou il joue)
+    public abstract bool GetIsActive(); // Rï¿½cupï¿½re si un personnage est actif ou pas sur la carte (ie il fait rien ou il joue)
     public abstract void SetIsActive(bool newIsActive);
     public abstract bool GetIsEnemy(); // Est ce que l'entity est un ennemi ?
     public abstract void SetIsEnemy(bool newIsEnemy);
@@ -35,12 +35,12 @@ public abstract class Entity : MonoBehaviour
     public abstract int GetMaxHP();
     public abstract void SetMaxHP(int newMaxHP);  
 
-    // Défense
+    // Dï¿½fense
     public abstract int GetDef();
     public abstract void SetDef(int newDef);
 
     // Vitesse
-    public abstract int GetSpeed(); // La vitesse de déplacement
+    public abstract int GetSpeed(); // La vitesse de dï¿½placement
     public abstract void SetSpeed(int newSpeed);
 
     // Attaque
@@ -55,14 +55,14 @@ public abstract class Entity : MonoBehaviour
     public abstract int GetMaxMana();
     public abstract void SetMaxMana(int newMaxMana);
 
-    // Coût
-    public abstract int GetCost(); // Le coût à payer pour placer l'entity sur l'arène
-    public abstract void SetCost();
+    // Coï¿½t
+    public abstract int GetCost(); // Le coï¿½t ï¿½ payer pour placer l'entity sur l'arï¿½ne
+    public abstract void SetCost(int newCost);
 
-    // Pour les capacités spéciales : Les différentes capacités sont des components qui héritent de la classe "Capacité".
-    // => Pour donner une capacité spéciale à une unité il faut lui donner le component (script) qui correspond à la capacité spéciale choisie
+    // Pour les capacitï¿½s spï¿½ciales : Les diffï¿½rentes capacitï¿½s sont des components qui hï¿½ritent de la classe "Capacitï¿½".
+    // => Pour donner une capacitï¿½ spï¿½ciale ï¿½ une unitï¿½ il faut lui donner le component (script) qui correspond ï¿½ la capacitï¿½ spï¿½ciale choisie
 
-    // Les classes "HealthManager", les classes d'attaques, etc vont dépendre de la classe des personnages (qui héritent de "Entity")
+    // Les classes "HealthManager", les classes d'attaques, etc vont dï¿½pendre de la classe des personnages (qui hï¿½ritent de "Entity")
 
 
 
