@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Allies
+  - Enemies
   layers:
   - Default
   - TransparentFX
@@ -12,7 +14,8 @@ TagManager:
   - Water
   - UI
   - No NavMesh
-  - 
+  - Entity
+  - Walls
   - 
   - 
   - 
