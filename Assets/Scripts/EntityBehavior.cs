@@ -3,6 +3,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
 
 public class EntityBehavior : MonoBehaviour
@@ -14,12 +15,12 @@ public class EntityBehavior : MonoBehaviour
     private BasicEntity enemyEntity;
     private bool isOnCooldown;
     private LayerMask layerMask;
+    public UnityEvent<float> attacked_enemy;
     void Start()
     {
         allyEntity = GetComponent<BasicEntity>();
         layerMask = LayerMask.GetMask("Walls");
         isOnCooldown = false;
-
     }
     
     private (GameObject,float) getClosestEnemy() {
@@ -98,6 +99,7 @@ public class EntityBehavior : MonoBehaviour
         int attackSpeed = allyEntity.GetAttackSpeed();
 
         enemyHealth.Damage(attack);
+        attacked_enemy.Invoke(attack);
         Debug.Log("ATTACK !");
 
         isOnCooldown = true;
