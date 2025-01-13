@@ -3,6 +3,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
 
 public class EntityBehavior : MonoBehaviour
@@ -14,6 +15,7 @@ public class EntityBehavior : MonoBehaviour
     private LayerMask layerMask;
     [SerializeField] private bool touchingGround;
     NavMeshAgent allyNavMeshAgent;
+    public UnityEvent<float> attacked_enemy;
     void Start()
     {
         allyEntity = GetComponent<BasicEntity>();
@@ -174,7 +176,7 @@ public class EntityBehavior : MonoBehaviour
         int attackSpeed = allyEntity.GetAttackSpeed();
 
         enemyHealth.Damage(attack);
-        //Debug.Log("ATTACK !");
+        attacked_enemy.Invoke(attack);
 
         isOnCooldown = true;
         StartCoroutine(AttackCooldown(attackSpeed));

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BasicEntity : Entity
 {
-    
+    [SerializeField] protected int manaRegen;
 
     public override int GetAttack()
     {
@@ -73,6 +73,11 @@ public class BasicEntity : Entity
     {
         return this.speed;
     }
+    public int GetManaRegen()
+    {
+        return this.manaRegen;
+    }
+
 
     public override void SetAttack(int newAttack)
     {
@@ -143,6 +148,11 @@ public class BasicEntity : Entity
     {
         this.speed = newSpeed;
     }
+    public void SetManaRegen(int newManaRegen)
+    {
+        this.manaRegen = newManaRegen;
+    }
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

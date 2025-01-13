@@ -1,9 +1,12 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Entity))]
 public class HealthManager : MonoBehaviour
 {
     BasicEntity entity;
+    public UnityEvent<float,float> health_change;
+    public UnityEvent<float> damaged;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -33,6 +36,7 @@ public class HealthManager : MonoBehaviour
         else {
             entity.SetHP(newHp);
         }
+        health_change.Invoke(newHp, entityMaxHp);
     }
 
     public void Damage(int damageAmount) {
@@ -44,6 +48,8 @@ public class HealthManager : MonoBehaviour
         else {
             entity.SetHP(newHp);
         }
+        health_change.Invoke(newHp, entity.GetMaxHP());
+        damaged.Invoke(entityHp - newHp);
     }
 
     void Death() {

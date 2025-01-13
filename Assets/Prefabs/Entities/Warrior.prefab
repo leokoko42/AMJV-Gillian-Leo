@@ -80,7 +80,7 @@ MonoBehaviour:
   isActive: 1
   isEnemy: 0
   isKing: 0
-  behavior: 2
+  behavior: 0
   hp: 100
   maxHP: 100
   def: 5
@@ -91,3 +91,4 @@ MonoBehaviour:
   maxMana: 100
   cost: 10
   range: 0
+  manaRegen: 1
