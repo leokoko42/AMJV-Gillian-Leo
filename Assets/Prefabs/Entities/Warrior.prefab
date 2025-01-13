@@ -85,10 +85,10 @@ MonoBehaviour:
   maxHP: 100
   def: 5
   speed: 3
-  attackSpeed: 5
-  attack: 10
+  attackSpeed: 1
+  attack: 5
   mana: 0
   maxMana: 100
   cost: 10
-  range: 0
+  range: 2
   manaRegen: 1

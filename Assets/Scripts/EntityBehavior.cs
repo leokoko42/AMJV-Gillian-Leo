@@ -14,6 +14,7 @@ public class EntityBehavior : MonoBehaviour
     private bool isOnCooldown;
     private LayerMask layerMask;
     [SerializeField] private bool touchingGround;
+    public bool stunned;
     NavMeshAgent allyNavMeshAgent;
     public UnityEvent<float> attacked_enemy;
     void Start()
@@ -24,9 +25,10 @@ public class EntityBehavior : MonoBehaviour
 
         allyNavMeshAgent = GetComponent<NavMeshAgent>();
         allyNavMeshAgent.speed = allyEntity.GetSpeed();
-        allyNavMeshAgent.stoppingDistance = 0;
+        allyNavMeshAgent.stoppingDistance = allyEntity.GetRange();
 
         touchingGround = true;
+        stunned = false;
     }
     
     void Update()
@@ -35,19 +37,11 @@ public class EntityBehavior : MonoBehaviour
     }
 
     void FixedUpdate() {
-        IsOnGound();
-        Debug.Log(allyNavMeshAgent.isOnOffMeshLink);
-        if (touchingGround && !allyNavMeshAgent.isOnOffMeshLink) {
-            UpdateEntityMovement();
-        }
+        UpdateEntityMovement();
     }
 
     private void IsOnGound() {
-        bool point1 = Physics.Raycast(transform.position + new Vector3(0.5f, 0, 0.5f), -Vector3.up, 0.6f);
-        bool point2 = Physics.Raycast(transform.position + new Vector3(-0.5f, 0, 0.5f), -Vector3.up, 0.6f);
-        bool point3 = Physics.Raycast(transform.position + new Vector3(0.5f, 0, -0.5f), -Vector3.up, 0.6f);
-        bool point4 = Physics.Raycast(transform.position + new Vector3(-0.5f, 0, -0.5f), -Vector3.up, 0.6f);
-        touchingGround = point1 && point2 && point3 && point4;
+        touchingGround = Physics.Raycast(transform.position, -Vector3.up, 0.6f);
     }
 
     private bool EntityCanMove() {
@@ -142,24 +136,24 @@ public class EntityBehavior : MonoBehaviour
     }
 
     //Methods designed to dictate the actions of the Entity
-    private void UpdateEntityMovement() {
+    public void UpdateEntityMovement() {
+        if (stunned || !allyEntity.GetIsActive()) {
+            allyNavMeshAgent.enabled = false;
+            return;
+        }
+        allyNavMeshAgent.enabled = true;
         GameObject targetEnemy;
         float distance;
 
         (targetEnemy,distance) = getTargetEntity();
         enemyEntity = targetEnemy.GetComponent<BasicEntity>();
 
-        if (!allyEntity.GetIsActive()) {
-            allyNavMeshAgent.enabled = false;
-        }
-        else if (distance <= allyEntity.GetRange() && !isEntityObstructed(targetEnemy, distance)) {
-            allyNavMeshAgent.enabled = false;
+        if (distance <= allyEntity.GetRange() && !isEntityObstructed(targetEnemy, distance)) {
             if (!isOnCooldown) {
                 AttackEnemy(targetEnemy);
             }
         }
         else {
-            allyNavMeshAgent.enabled = true;
             MoveToEnemy(targetEnemy);
         }
     }
@@ -178,7 +172,6 @@ public class EntityBehavior : MonoBehaviour
         enemyHealth.Damage(attack);
         attacked_enemy.Invoke(attack);
 
-        isOnCooldown = true;
         StartCoroutine(AttackCooldown(attackSpeed));
     }
 
@@ -189,7 +182,29 @@ public class EntityBehavior : MonoBehaviour
     //Differents corroutines
     IEnumerator AttackCooldown(int cooldown)
     {
+        isOnCooldown = true;
         yield return new WaitForSeconds(cooldown);
         isOnCooldown = false;
+    }
+
+    public void ApplyKnockback(Vector3 origin, float stunCooldown) {
+        StartCoroutine(Knockback(origin, stunCooldown));
+    }
+
+    IEnumerator Knockback(Vector3 origin, float stunCooldown) {
+        StartCoroutine(StunnedForSeconds(stunCooldown));
+        while (allyNavMeshAgent.enabled) {
+            yield return new WaitForSeconds(0.1f);
+        }
+        //yield return new WaitForSeconds(0.1f);
+        GetComponent<Rigidbody>().AddExplosionForce(200, origin, 10, 1);
+    }
+    IEnumerator StunnedForSeconds(float cooldown) {
+        stunned = true;
+        yield return new WaitForSeconds(cooldown);
+        while(!touchingGround) {
+            yield return new WaitForSeconds(0.1f);
+        }
+        stunned = false;
     }
 }
