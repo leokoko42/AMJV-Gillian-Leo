@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Allies
   - Enemies
+  - Ground
   layers:
   - Default
   - TransparentFX
@@ -16,9 +17,8 @@ TagManager:
   - No NavMesh
   - Entity
   - Walls
-  - 
-  - 
-  - 
+  - Ground
+  - Pit
   - 
   - 
   - 

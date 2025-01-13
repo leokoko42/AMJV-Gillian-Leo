@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5030507130570611928}
   - component: {fileID: 6342660298249484242}
   - component: {fileID: 201298695236593989}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Layer4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4552803294784232068}
-  m_Layer: 0
+  - component: {fileID: 520415240958637336}
+  m_Layer: 8
   m_Name: ObstacleRocher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145,6 +146,22 @@ Transform:
   - {fileID: 6018031116852505445}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &520415240958637336
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100539820424449076}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.5, y: 1.5, z: 1.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 3, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &2645423627792224651
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,7 +174,7 @@ GameObject:
   - component: {fileID: 1263942149538009155}
   - component: {fileID: 8813577037675737734}
   - component: {fileID: 5881318192251054212}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Layer1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,7 +282,7 @@ GameObject:
   - component: {fileID: 5355517192826143313}
   - component: {fileID: 1323645734618521301}
   - component: {fileID: 152547740751092612}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Layer5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -373,7 +390,7 @@ GameObject:
   - component: {fileID: 2655857607723833303}
   - component: {fileID: 4479134656476276901}
   - component: {fileID: 7802717958400080789}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Layer2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -481,7 +498,7 @@ GameObject:
   - component: {fileID: 4845893677626749314}
   - component: {fileID: 8903274134578016816}
   - component: {fileID: 2514409009900277907}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Layer6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -589,7 +606,7 @@ GameObject:
   - component: {fileID: 5358681263913764871}
   - component: {fileID: 6478019580042550623}
   - component: {fileID: 5255358277479935656}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Layer3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
