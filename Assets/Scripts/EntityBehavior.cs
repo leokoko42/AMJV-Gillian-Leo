@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -16,6 +17,9 @@ public class EntityBehavior : MonoBehaviour
     [SerializeField] private bool touchingGround;
     NavMeshAgent allyNavMeshAgent;
     public UnityEvent<float> attacked_enemy;
+    private GameObject game_manager_object;
+    private GameManager game_manager;
+
     void Start()
     {
         allyEntity = GetComponent<BasicEntity>();
@@ -27,6 +31,9 @@ public class EntityBehavior : MonoBehaviour
         allyNavMeshAgent.stoppingDistance = 0;
 
         touchingGround = true;
+
+        game_manager_object = GameObject.Find("GameManager");
+        game_manager = game_manager_object.GetComponent<GameManager>();
     }
     
     void Update()
@@ -36,17 +43,16 @@ public class EntityBehavior : MonoBehaviour
 
     void FixedUpdate() {
         IsOnGound();
-        Debug.Log(allyNavMeshAgent.isOnOffMeshLink);
         if (touchingGround && !allyNavMeshAgent.isOnOffMeshLink) {
             UpdateEntityMovement();
         }
     }
 
     private void IsOnGound() {
-        bool point1 = Physics.Raycast(transform.position + new Vector3(0.5f, 0, 0.5f), -Vector3.up, 0.6f);
-        bool point2 = Physics.Raycast(transform.position + new Vector3(-0.5f, 0, 0.5f), -Vector3.up, 0.6f);
-        bool point3 = Physics.Raycast(transform.position + new Vector3(0.5f, 0, -0.5f), -Vector3.up, 0.6f);
-        bool point4 = Physics.Raycast(transform.position + new Vector3(-0.5f, 0, -0.5f), -Vector3.up, 0.6f);
+        bool point1 = Physics.Raycast(transform.position + new Vector3(0.5f, 0, 0.5f), -Vector3.up, 0.7f);
+        bool point2 = Physics.Raycast(transform.position + new Vector3(-0.5f, 0, 0.5f), -Vector3.up, 0.7f);
+        bool point3 = Physics.Raycast(transform.position + new Vector3(0.5f, 0, -0.5f), -Vector3.up, 0.7f);
+        bool point4 = Physics.Raycast(transform.position + new Vector3(-0.5f, 0, -0.5f), -Vector3.up, 0.7f);
         touchingGround = point1 && point2 && point3 && point4;
     }
 
@@ -61,7 +67,7 @@ public class EntityBehavior : MonoBehaviour
 
     //Methods designed to find the different targets
     private (GameObject,float) getTargetEntity() {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemies");
+        List<GameObject> enemies = game_manager.enemy_list;
         Entity.Behavior entityBehavior = allyEntity.GetBehavior();
         if (entityBehavior == Entity.Behavior.Neutral) {
             return getClosestEnemy(enemies);
@@ -76,8 +82,8 @@ public class EntityBehavior : MonoBehaviour
             throw new Exception("Entity doesn't have a valid Behavior");
         }
     }
-    private (GameObject,float) getClosestEnemyOfKing(GameObject[] enemies) {
-        GameObject[] allies = GameObject.FindGameObjectsWithTag("Allies");
+    private (GameObject,float) getClosestEnemyOfKing(List<GameObject> enemies) {
+        List<GameObject> allies = game_manager.ally_list;
         (GameObject allyKing, float kingDistance) = getKingOf(allies);
 
         EntityBehavior allyKingBehavior = allyKing.GetComponent<EntityBehavior>();
@@ -85,7 +91,7 @@ public class EntityBehavior : MonoBehaviour
         float distance = Vector3.Distance(transform.position, allyKingClosestEnemy.transform.position);
         return (allyKingClosestEnemy, distance);
     }
-    private (GameObject,float) getClosestEnemy(GameObject[] enemies) {
+    private (GameObject,float) getClosestEnemy(List<GameObject> enemies) {
         float minDistanceNotObstructed = -1f; 
         float minDistanceObstructed = -1f;
         GameObject closestEnemyNotObstructed = null;
@@ -130,7 +136,7 @@ public class EntityBehavior : MonoBehaviour
         return isObstructed;
     }
 
-    private (GameObject,float) getKingOf(GameObject[] entities) {
+    private (GameObject,float) getKingOf(List<GameObject> entities) {
         foreach (GameObject entity in entities) {
             enemyEntity = entity.GetComponent<BasicEntity>();
             if (enemyEntity.GetIsKing()) {
