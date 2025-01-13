@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Button settings;
     [SerializeField] private TMP_Text round_text;
     [SerializeField] private TMP_Text time_text;
+    public List<GameObject> enemy_list;
+    public List<GameObject> ally_list;
 
     private float start_time;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -21,6 +24,10 @@ public class GameManager : MonoBehaviour
         quit.onClick.AddListener(QuitGame);
         settings.onClick.AddListener(SettingsMenu);
         start_time = Time.time;
+        GameObject[] enemy_array = GameObject.FindGameObjectsWithTag("Enemies");
+        GameObject[] ally_array = GameObject.FindGameObjectsWithTag("Allies");
+        enemy_list = new List<GameObject>(enemy_array);
+        ally_list = new List<GameObject>(ally_array);
     }
 
     // Update is called once per frame
@@ -66,5 +73,25 @@ public class GameManager : MonoBehaviour
     void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void AddEnemy(GameObject e)
+    {
+        enemy_list.Add(e);
+    }
+
+    public void AddAlly(GameObject a)
+    {
+        ally_list.Add(a);
+    }
+
+    public void RemoveEnemy(GameObject e)
+    {
+        enemy_list.Remove(e);
+    }
+
+    public void RemoveAlly(GameObject a)
+    {
+        ally_list.Remove(a);
     }
 }
