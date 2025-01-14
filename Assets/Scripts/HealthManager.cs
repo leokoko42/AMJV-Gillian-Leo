@@ -5,6 +5,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Entity))]
 public class HealthManager : MonoBehaviour
 {
+    private GameManager gameManager;
     BasicEntity entity;
     public UnityEvent<float,float> health_change;
     public UnityEvent<float> damaged;
@@ -12,6 +13,7 @@ public class HealthManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         entity = GetComponent<BasicEntity>();
         layerMask = LayerMask.GetMask("Entity");
     }
@@ -23,7 +25,9 @@ public class HealthManager : MonoBehaviour
     }
 
     void FixedUpdate() {
-
+        if (transform.position.y < -10) {
+            Death();
+        }
     }
 
     public void Heal(int healAmount) {
@@ -57,6 +61,13 @@ public class HealthManager : MonoBehaviour
         Collider[] colliders = Physics.OverlapCapsule(transform.position - delta, transform.position + delta, 5f, layerMask);
         foreach (Collider collider in colliders) {
             collider.GetComponent<EntityBehavior>().ApplyKnockback(transform.position, 1);
+        }
+
+        if (GetComponent<BasicEntity>().GetIsEnemy()) {
+            gameManager.RemoveEnemy(gameObject);
+        }
+        else {
+            gameManager.RemoveAlly(gameObject);
         }
         Destroy(gameObject);
     }

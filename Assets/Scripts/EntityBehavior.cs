@@ -11,20 +11,24 @@ public class EntityBehavior : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private BasicEntity allyEntity;
-    private BasicEntity enemyEntity;
+    private BasicEntity oponentEntity;
     private bool isOnCooldown;
-    private LayerMask layerMask;
+    private LayerMask layerMaskWalls, layerMaskGround;
     [SerializeField] private bool touchingGround;
     public bool stunned;
     NavMeshAgent allyNavMeshAgent;
     public UnityEvent<float> attacked_enemy;
     private GameObject game_manager_object;
     private GameManager game_manager;
+    private Entity.Behavior entityBehavior;
 
     void Start()
     {
         allyEntity = GetComponent<BasicEntity>();
-        layerMask = LayerMask.GetMask("Walls");
+        entityBehavior = allyEntity.GetBehavior();
+
+        layerMaskWalls = LayerMask.GetMask("Walls");
+        layerMaskGround = LayerMask.GetMask("Ground");
         isOnCooldown = false;
 
         allyNavMeshAgent = GetComponent<NavMeshAgent>();
@@ -48,135 +52,133 @@ public class EntityBehavior : MonoBehaviour
     }
 
     private void IsOnGound() {
-        touchingGround = Physics.Raycast(transform.position, -Vector3.up, 0.6f);
-    }
-
-    private bool EntityCanMove() {
-        if (touchingGround) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        touchingGround = Physics.Raycast(transform.position, -Vector3.up, 0.6f, layerMaskGround);
     }
 
     //Methods designed to find the different targets
     private (GameObject,float) getTargetEntity() {
-        List<GameObject> enemies = game_manager.enemy_list;
-        Entity.Behavior entityBehavior = allyEntity.GetBehavior();
+        List<GameObject> oponents;
+        if (allyEntity.GetIsEnemy()) {
+            oponents = game_manager.ally_list;
+        }
+        else {
+            oponents = game_manager.enemy_list;
+        }
+        
+        
         if (entityBehavior == Entity.Behavior.Neutral) {
-            return getClosestEnemy(enemies);
+            return getClosestOponent(oponents);
         }
         else if (entityBehavior == Entity.Behavior.Offense) {
-            return getKingOf(enemies);
+            return getKingOf(oponents);
         }
         else if (entityBehavior == Entity.Behavior.Defense) {
-            return getClosestEnemyOfKing(enemies);
+            return getClosestOponentOfKing(oponents);
         }   
         else {
             throw new Exception("Entity doesn't have a valid Behavior");
         }
     }
-    private (GameObject,float) getClosestEnemyOfKing(List<GameObject> enemies) {
+    private (GameObject,float) getClosestOponentOfKing(List<GameObject> oponents) {
         List<GameObject> allies = game_manager.ally_list;
         (GameObject allyKing, float kingDistance) = getKingOf(allies);
 
         EntityBehavior allyKingBehavior = allyKing.GetComponent<EntityBehavior>();
-        (GameObject allyKingClosestEnemy, float enemyDistanceFromKing) = allyKingBehavior.getClosestEnemy(enemies);
-        float distance = Vector3.Distance(transform.position, allyKingClosestEnemy.transform.position);
-        return (allyKingClosestEnemy, distance);
+        (GameObject allyKingClosestOponent, float oponentDistanceFromKing) = allyKingBehavior.getClosestOponent(oponents);
+        float distance = Vector3.Distance(transform.position, allyKingClosestOponent.transform.position);
+        return (allyKingClosestOponent, distance);
     }
-    private (GameObject,float) getClosestEnemy(List<GameObject> enemies) {
+    private (GameObject,float) getClosestOponent(List<GameObject> oponents) {
         float minDistanceNotObstructed = -1f; 
         float minDistanceObstructed = -1f;
-        GameObject closestEnemyNotObstructed = null;
-        GameObject closestEnemyObstructed = null;
+        GameObject closestOponentNotObstructed = null;
+        GameObject closestOponentObstructed = null;
 
-        foreach (GameObject enemy in enemies)
+        foreach (GameObject oponent in oponents)
         {
-            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            float distance = Vector3.Distance(transform.position, oponent.transform.position);
 
-            bool isObstructed = isEntityObstructed(enemy, distance);
+            bool isObstructed = isEntityObstructed(oponent, distance);
            
             if (isObstructed) {
                 if (minDistanceObstructed == -1f || distance < minDistanceObstructed) {
-                    closestEnemyObstructed = enemy;
+                    closestOponentObstructed = oponent;
                     minDistanceObstructed = distance;
                 }
             }
             else {
                 if (minDistanceNotObstructed == -1f || distance < minDistanceNotObstructed) {
-                    closestEnemyNotObstructed = enemy;
+                    closestOponentNotObstructed = oponent;
                     minDistanceNotObstructed = distance;
                 }
             }
         }
-        if (closestEnemyNotObstructed!=null) {
-            return (closestEnemyNotObstructed, minDistanceNotObstructed);
+        if (closestOponentNotObstructed!=null) {
+            return (closestOponentNotObstructed, minDistanceNotObstructed);
         }
         else {
-            return (closestEnemyObstructed, minDistanceObstructed);
+            return (closestOponentObstructed, minDistanceObstructed);
         }
     }
 
     private bool isEntityObstructed(GameObject entity, float distance) {
         Vector3 rayDirection =  entity.transform.position-transform.position;
         Vector3 rayOrigin = transform.position + new Vector3(0, 0.5f, 0);
-        if (Physics.Raycast(rayOrigin, rayDirection, distance, layerMask)) {
+        if (Physics.Raycast(rayOrigin, rayDirection, distance, layerMaskWalls)) {
             Debug.DrawRay(rayOrigin, rayDirection, Color.red);
         }
         else {Debug.DrawRay(rayOrigin, rayDirection, Color.green);}
 
-        bool isObstructed = Physics.Raycast(rayOrigin, rayDirection, distance, layerMask);
+        bool isObstructed = Physics.Raycast(rayOrigin, rayDirection, distance, layerMaskWalls);
         return isObstructed;
     }
 
     private (GameObject,float) getKingOf(List<GameObject> entities) {
         foreach (GameObject entity in entities) {
-            enemyEntity = entity.GetComponent<BasicEntity>();
-            if (enemyEntity.GetIsKing()) {
+            oponentEntity = entity.GetComponent<BasicEntity>();
+            if (oponentEntity.GetIsKing()) {
                 float distance = Vector3.Distance(entity.transform.position,transform.position);
                 return (entity, distance);
             }
         }
-        throw new Exception("No enemy king");
+        throw new Exception("No oponent king");
     }
 
     //Methods designed to dictate the actions of the Entity
     public void UpdateEntityMovement() {
         if (stunned || !allyEntity.GetIsActive()) {
+            IsOnGound();
             allyNavMeshAgent.enabled = false;
             return;
         }
         allyNavMeshAgent.enabled = true;
-        GameObject targetEnemy;
+        GameObject targetOponent;
         float distance;
 
-        (targetEnemy,distance) = getTargetEntity();
-        enemyEntity = targetEnemy.GetComponent<BasicEntity>();
+        (targetOponent,distance) = getTargetEntity();
 
-        if (distance <= allyEntity.GetRange() && !isEntityObstructed(targetEnemy, distance)) {
+        if (distance <= allyEntity.GetRange() && !isEntityObstructed(targetOponent, distance)) {
             if (!isOnCooldown) {
-                AttackEnemy(targetEnemy);
+                AttackOther(targetOponent);
             }
         }
         else {
-            MoveToEnemy(targetEnemy);
+            MoveToGameObject(targetOponent);
         }
     }
 
 
     //Usefull methods for basic actions
-    private void MoveToEnemy(GameObject enemy) {
-        allyNavMeshAgent.SetDestination(enemy.transform.position);
+    private void MoveToGameObject(GameObject gameObject) {
+        allyNavMeshAgent.SetDestination(gameObject.transform.position);
     }
 
-    private void AttackEnemy(GameObject enemy) {
-        HealthManager enemyHealth = enemy.GetComponent<HealthManager>();
+    private void AttackOther(GameObject oponent) {
+        HealthManager oponentHealth = oponent.GetComponent<HealthManager>();
         int attack = allyEntity.GetAttack();
         int attackSpeed = allyEntity.GetAttackSpeed();
 
-        enemyHealth.Damage(attack);
+        oponentHealth.Damage(attack);
         attacked_enemy.Invoke(attack);
 
         StartCoroutine(AttackCooldown(attackSpeed));
