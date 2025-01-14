@@ -12,6 +12,7 @@ public class EntityBehavior : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private BasicEntity allyEntity;
     private BasicEntity oponentEntity;
+    private Rigidbody allyRigidBody;
     private bool isOnCooldown;
     private LayerMask layerMaskWalls, layerMaskGround;
     [SerializeField] private bool touchingGround;
@@ -26,6 +27,8 @@ public class EntityBehavior : MonoBehaviour
     {
         allyEntity = GetComponent<BasicEntity>();
         entityBehavior = allyEntity.GetBehavior();
+
+        allyRigidBody = GetComponent<Rigidbody>();
 
         layerMaskWalls = LayerMask.GetMask("Walls");
         layerMaskGround = LayerMask.GetMask("Ground");
@@ -148,7 +151,10 @@ public class EntityBehavior : MonoBehaviour
     public void UpdateEntityMovement() {
         if (stunned || !allyEntity.GetIsActive()) {
             IsOnGound();
-            allyNavMeshAgent.enabled = false;
+            if (allyNavMeshAgent.enabled) {
+                allyNavMeshAgent.enabled = false;
+                allyRigidBody.linearVelocity = new Vector3();
+            }
             return;
         }
         allyNavMeshAgent.enabled = true;
