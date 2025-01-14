@@ -212,7 +212,7 @@ public class EntityBehavior : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         //yield return new WaitForSeconds(0.1f);
-        GetComponent<Rigidbody>().AddExplosionForce(200, origin, 10, 1);
+        //GetComponent<Rigidbody>().AddExplosionForce(200, new Vector3(origin.x, origin.y-0.5f, origin.z) , 10, 10);
     }
     IEnumerator StunnedForSeconds(float cooldown) {
         stunned = true;

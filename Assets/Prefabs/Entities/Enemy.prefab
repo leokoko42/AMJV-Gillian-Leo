@@ -893,6 +893,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   touchingGround: 0
+  stunned: 0
   attacked_enemy:
     m_PersistentCalls:
       m_Calls: []
