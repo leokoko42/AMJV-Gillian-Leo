@@ -7,6 +7,7 @@ public class UnitPlacement : MonoBehaviour
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private GameObject warrior;
     private GameObject to_spawn;
+    private int spawn_cost;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -26,11 +27,13 @@ public class UnitPlacement : MonoBehaviour
                 Vector3 spawn_pos = new Vector3(point.x, point.y + 1.5f, point.z);
                 if (to_spawn != null)
                 {
-                    GameObject entity = Instantiate(to_spawn, spawn_pos, Quaternion.identity);
-                    BasicEntity basicEntity = entity.GetComponent<BasicEntity>();
-                    basicEntity.SetIsActive(false);
-                    gameManager.AddAlly(entity);
-                    Debug.Log(gameManager.ally_list);
+                    if (spawn_cost <= gameManager.coins) {
+                        GameObject entity = Instantiate(to_spawn, spawn_pos, Quaternion.identity);
+                        BasicEntity basicEntity = entity.GetComponent<BasicEntity>();
+                        basicEntity.SetIsActive(false);
+                        gameManager.RemoveCoins(basicEntity.GetCost());
+                        gameManager.AddAlly(entity);
+                    }
                 }
             }
         }
@@ -42,9 +45,11 @@ public class UnitPlacement : MonoBehaviour
         {
             case "Warrior":
                 to_spawn = warrior;
+                spawn_cost = 10;
                 break;
             default:
                 to_spawn = null;
+                spawn_cost = 0;
                 break;
         }
     }

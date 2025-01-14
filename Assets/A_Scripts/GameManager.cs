@@ -13,9 +13,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Button settings;
     [SerializeField] private TMP_Text round_text;
     [SerializeField] private TMP_Text time_text;
+    [SerializeField] private TMP_Text coin_text;
+
     public List<GameObject> enemy_list;
     public List<GameObject> ally_list;
 
+    public int coins;
     private float start_time;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,6 +31,7 @@ public class GameManager : MonoBehaviour
         GameObject[] ally_array = GameObject.FindGameObjectsWithTag("Allies");
         enemy_list = new List<GameObject>(enemy_array);
         ally_list = new List<GameObject>(ally_array);
+        coins = 100;
     }
 
     // Update is called once per frame
@@ -58,6 +62,18 @@ public class GameManager : MonoBehaviour
         {
             time_text.text = string.Format("Time : {0}s", seconds);
         }
+    }
+
+    public void AddCoins(int amount)
+    {
+        coins += amount;
+        coin_text.text = coins.ToString();
+    }
+
+    public void RemoveCoins(int amount)
+    {
+        coins -= amount;
+        coin_text.text = coins.ToString();
     }
 
     void TogglePause()

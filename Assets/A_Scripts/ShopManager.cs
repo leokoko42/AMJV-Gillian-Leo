@@ -8,6 +8,7 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private GameManager gameManager;
     [SerializeField] private Button warrior;
     [SerializeField] private Button start;
+    [SerializeField] private GameObject shop;
     public UnityEvent<string> change_spawn;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -30,12 +31,11 @@ public class ShopManager : MonoBehaviour
 
     void StartBattle()
     {
-        Debug.Log("hello");
         foreach (GameObject ally in gameManager.ally_list)
         {
-            Debug.Log("hola");
             BasicEntity ally_behavior = ally.GetComponent<BasicEntity>();
             ally_behavior.SetIsActive(true);
         }
+        shop.SetActive(false);
     }
 }
