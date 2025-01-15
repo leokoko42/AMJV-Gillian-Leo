@@ -4,24 +4,22 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Analytics;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
 
 public class EntityBehavior : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     private BasicEntity allyEntity;
-    private BasicEntity oponentEntity;
     private Rigidbody allyRigidBody;
-    private bool isOnCooldown;
+    private bool stunned, isOnCooldown, touchingGround;
     private LayerMask layerMaskWalls, layerMaskGround;
-    [SerializeField] private bool touchingGround;
-    public bool stunned;
-    NavMeshAgent allyNavMeshAgent;
+    private NavMeshAgent allyNavMeshAgent;
     public UnityEvent<float> attacked_enemy;
-    private GameObject game_manager_object;
     private GameManager game_manager;
     private Entity.Behavior entityBehavior;
+    private List<GameObject> allies_list, oponents_list;
+    private int currentNavMeshMask;
 
     void Start()
     {
@@ -41,49 +39,65 @@ public class EntityBehavior : MonoBehaviour
         touchingGround = true;
         stunned = false;
 
-        game_manager_object = GameObject.Find("GameManager");
-        game_manager = game_manager_object.GetComponent<GameManager>();
+        game_manager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        UpdateGroundArea();
+        RefreshEntitiesLists();
     }
     
-    void Update()
-    {
-        
+    public void RefreshEntitiesLists() {
+        if (allyEntity.GetIsEnemy()) {
+            allies_list = game_manager.enemy_list;
+            oponents_list = game_manager.ally_list;
+        }
+        else {
+            allies_list = game_manager.ally_list;
+            oponents_list = game_manager.enemy_list;
+        }
     }
 
     void FixedUpdate() {
+        RefreshEntitiesLists();
         UpdateEntityMovement();
     }
 
-    private void IsOnGound() {
+    private void UpdateIsOnGround() {
         touchingGround = Physics.Raycast(transform.position, -Vector3.up, 0.6f, layerMaskGround);
+    }
+
+    private void UpdateGroundArea() {
+        NavMeshHit hit;
+        allyNavMeshAgent.SamplePathPosition(NavMesh.AllAreas, 0, out hit);
+        if (!allyEntity.GetIsEnemy()) {
+            Debug.Log(currentNavMeshMask);
+        }
+        if (hit.mask != currentNavMeshMask) {
+            currentNavMeshMask = hit.mask;
+            if (hit.mask == 1) {
+                allyNavMeshAgent.speed = 3;
+            }
+            else if (hit.mask == 8) {
+                allyNavMeshAgent.speed = 1;
+            }
+        }
     }
 
     //Methods designed to find the different targets
     private (GameObject,float) getTargetEntity() {
-        List<GameObject> oponents;
-        if (allyEntity.GetIsEnemy()) {
-            oponents = game_manager.ally_list;
-        }
-        else {
-            oponents = game_manager.enemy_list;
-        }
-        
-        
         if (entityBehavior == Entity.Behavior.Neutral) {
-            return getClosestOponent(oponents);
+            return getClosestOponent(oponents_list);
         }
         else if (entityBehavior == Entity.Behavior.Offense) {
-            return getKingOf(oponents);
+            return getKingOf(oponents_list);
         }
         else if (entityBehavior == Entity.Behavior.Defense) {
-            return getClosestOponentOfKing(oponents);
+            return getClosestOponentOfKing(oponents_list, allies_list);
         }   
         else {
             throw new Exception("Entity doesn't have a valid Behavior");
         }
     }
-    private (GameObject,float) getClosestOponentOfKing(List<GameObject> oponents) {
-        List<GameObject> allies = game_manager.ally_list;
+    private (GameObject,float) getClosestOponentOfKing(List<GameObject> oponents, List<GameObject> allies) {
         (GameObject allyKing, float kingDistance) = getKingOf(allies);
 
         EntityBehavior allyKingBehavior = allyKing.GetComponent<EntityBehavior>();
@@ -138,7 +152,7 @@ public class EntityBehavior : MonoBehaviour
 
     private (GameObject,float) getKingOf(List<GameObject> entities) {
         foreach (GameObject entity in entities) {
-            oponentEntity = entity.GetComponent<BasicEntity>();
+            BasicEntity oponentEntity = entity.GetComponent<BasicEntity>();
             if (oponentEntity.GetIsKing()) {
                 float distance = Vector3.Distance(entity.transform.position,transform.position);
                 return (entity, distance);
@@ -149,27 +163,32 @@ public class EntityBehavior : MonoBehaviour
 
     //Methods designed to dictate the actions of the Entity
     public void UpdateEntityMovement() {
-        if (stunned || !allyEntity.GetIsActive()) {
-            IsOnGound();
+        UpdateIsOnGround();
+        if (stunned || !allyEntity.GetIsActive()) 
+        {
             if (allyNavMeshAgent.enabled) {
                 allyNavMeshAgent.enabled = false;
                 allyRigidBody.linearVelocity = new Vector3();
             }
             return;
         }
-        allyNavMeshAgent.enabled = true;
-        GameObject targetOponent;
-        float distance;
+        else 
+        {
+            allyNavMeshAgent.enabled = true;
+            UpdateGroundArea();
+            GameObject targetOponent;
+            float distance;
 
-        (targetOponent,distance) = getTargetEntity();
-
-        if (distance <= allyEntity.GetRange() && !isEntityObstructed(targetOponent, distance)) {
-            if (!isOnCooldown) {
-                AttackOther(targetOponent);
+            (targetOponent,distance) = getTargetEntity();
+            float range = allyEntity.GetRange();
+            if (distance <= range && !isEntityObstructed(targetOponent, distance)) {
+                if (!isOnCooldown) {
+                    AttackOther(targetOponent, range);
+                }
             }
-        }
-        else {
-            MoveToGameObject(targetOponent);
+            else {
+                MoveToGameObject(targetOponent);
+            }
         }
     }
 
@@ -179,7 +198,8 @@ public class EntityBehavior : MonoBehaviour
         allyNavMeshAgent.SetDestination(gameObject.transform.position);
     }
 
-    private void AttackOther(GameObject oponent) {
+    private void AttackOther(GameObject oponent, float range) {
+        if (range<5) {}
         HealthManager oponentHealth = oponent.GetComponent<HealthManager>();
         int attack = allyEntity.GetAttack();
         int attackSpeed = allyEntity.GetAttackSpeed();

@@ -60,7 +60,7 @@ public class HealthManager : MonoBehaviour
         Vector3 delta = new Vector3(0,1,0);
         Collider[] colliders = Physics.OverlapCapsule(transform.position - delta, transform.position + delta, 5f, layerMask);
         foreach (Collider collider in colliders) {
-            collider.GetComponent<EntityBehavior>().ApplyKnockback(transform.position, 1);
+            collider.GetComponent<EntityBehavior>().ApplyKnockback(transform.position, 3);
         }
 
         if (GetComponent<BasicEntity>().GetIsEnemy()) {

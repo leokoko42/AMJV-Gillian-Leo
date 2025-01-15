@@ -811,20 +811,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d6cfe30aa85f7499593736cb5c8897, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActive: 0
+  isActive: 1
   isEnemy: 1
   isKing: 0
   behavior: 0
   hp: 30
   maxHP: 30
   def: 0
-  speed: 0
-  attackSpeed: 0
-  attack: 0
+  speed: 2
+  attackSpeed: 1
+  attack: 5
   mana: 0
   maxMana: 100
   cost: 0
-  range: 0
+  range: 2
   manaRegen: 10
 --- !u!114 &5507245550275981327
 MonoBehaviour:
@@ -893,6 +893,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   touchingGround: 0
+  stunned: 0
   attacked_enemy:
     m_PersistentCalls:
       m_Calls: []
