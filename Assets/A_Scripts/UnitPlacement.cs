@@ -55,6 +55,22 @@ public class UnitPlacement : MonoBehaviour
                 }
             }
         }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            Vector3 mousePosition = Input.mousePosition;
+            Ray ray = _camera.ScreenPointToRay(mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerEntity))
+            {
+                if (hit.collider != null) {
+                    GameObject entity = hit.transform.gameObject;
+                    entity_occurences[entity.name.Replace("(Clone)","")] -= 1;
+                    gameManager.AddCoins(entity.GetComponent<BasicEntity>().GetCost());
+                    gameManager.RemoveAlly(entity);
+                    Destroy(entity);
+                }
+            }
+        }
     }
 
     public void UnitToSpawn(GameObject entity_obj)
