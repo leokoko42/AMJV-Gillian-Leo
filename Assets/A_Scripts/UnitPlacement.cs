@@ -1,36 +1,54 @@
+using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class UnitPlacement : MonoBehaviour
 {
     [SerializeField] private GameManager gameManager;
     [SerializeField] private Camera _camera;
-    [SerializeField] private LayerMask layerMask;
+    [SerializeField] private LayerMask layerPlacement;
+    [SerializeField] private LayerMask layerEntity;
     [SerializeField] private GameObject warrior;
-    private GameObject to_spawn;
+    [SerializeField] private GameObject tank;
+
+    private GameObject to_spawn_object;
+    private string to_spawn_name;
     private int spawn_cost;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public Dictionary<string, int> entity_occurences;
+
     void Start()
     {
-        to_spawn = null;
+        to_spawn_object = null;
+        GameObject[] ally_prefabs = gameManager.FindPrefabs("Assets/Prefabs/Entities/Allies");
+        entity_occurences = new Dictionary<string, int>();
+        for (int i = 0; i < ally_prefabs.Length; i++)
+        {
+            entity_occurences.Add(ally_prefabs[i].name, 0);
+            Debug.Log(ally_prefabs[i].name);
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 mousePosition = Input.mousePosition;
             Ray ray = _camera.ScreenPointToRay(mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerMask))
+            if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerPlacement))
             {
                 Vector3 point = hit.point;
                 Vector3 spawn_pos = new Vector3(point.x, point.y + 1.5f, point.z);
-                if (to_spawn != null)
+                if (to_spawn_object != null)
                 {
-                    if (spawn_cost <= gameManager.coins) {
-                        GameObject entity = Instantiate(to_spawn, spawn_pos, Quaternion.identity);
+                    Debug.Log(entity_occurences[to_spawn_name]);
+                    Debug.Log(gameManager.entity_max_occurences[to_spawn_name]);
+                    if (spawn_cost <= gameManager.coins && entity_occurences[to_spawn_name] < gameManager.entity_max_occurences[to_spawn_name]) {
+                        GameObject entity = Instantiate(to_spawn_object, spawn_pos, Quaternion.identity);
                         BasicEntity basicEntity = entity.GetComponent<BasicEntity>();
                         basicEntity.SetIsActive(false);
+                        entity_occurences[to_spawn_name] += 1;
                         gameManager.RemoveCoins(basicEntity.GetCost());
                         gameManager.AddAlly(entity);
                     }
@@ -39,18 +57,26 @@ public class UnitPlacement : MonoBehaviour
         }
     }
 
-    public void UnitToSpawn(string name)
+    public void UnitToSpawn(GameObject entity_obj)
     {
-        switch (name)
-        {
-            case "Warrior":
-                to_spawn = warrior;
-                spawn_cost = 10;
-                break;
-            default:
-                to_spawn = null;
-                spawn_cost = 0;
-                break;
-        }
+        to_spawn_name = entity_obj.name;
+        to_spawn_object = entity_obj;
+        spawn_cost = entity_obj.GetComponent<BasicEntity>().GetCost();
+
+        //switch (name)
+        //{
+        //    case "Warrior":
+        //        to_spawn_object = warrior;
+        //        spawn_cost = 10;
+        //        break;
+        //    case "Tank":
+        //        to_spawn_object = tank;
+        //        spawn_cost = 18;
+        //        break;
+        //    default:
+        //        to_spawn_object = null;
+        //        spawn_cost = 0;
+        //        break;
+        //}
     }
 }

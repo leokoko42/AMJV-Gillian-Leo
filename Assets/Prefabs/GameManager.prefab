@@ -312,8 +312,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2.6168823, y: 0.8723831}
-  m_SizeDelta: {x: 1950.7996, y: 969.9955}
+  m_AnchoredPosition: {x: -102.375885, y: 13.654129}
+  m_SizeDelta: {x: 3796.8484, y: 2449.025}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9092197165265326221
 CanvasRenderer:
@@ -1422,8 +1422,10 @@ MonoBehaviour:
   settings: {fileID: 4460372003891199606}
   round_text: {fileID: 6941686039086655890}
   time_text: {fileID: 8422126262308423946}
+  coin_text: {fileID: 0}
   enemy_list: []
   ally_list: []
+  coins: 0
 --- !u!1 &7455939509117031983
 GameObject:
   m_ObjectHideFlags: 0
