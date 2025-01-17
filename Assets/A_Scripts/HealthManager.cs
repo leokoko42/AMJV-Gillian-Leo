@@ -20,7 +20,7 @@ public class HealthManager : MonoBehaviour
 
     // Update is called once per frame
     private bool hPressed;
-    void Update(){
+    void Update() {
 
     }
 

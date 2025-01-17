@@ -10,6 +10,7 @@ using UnityEngine.Rendering;
 
 public class EntityBehavior : MonoBehaviour
 {
+    [SerializeField] private GameObject entityBullet;
     private BasicEntity allyEntity;
     private Rigidbody allyRigidBody;
     private bool stunned, isOnCooldown, touchingGround;
@@ -44,6 +45,10 @@ public class EntityBehavior : MonoBehaviour
         UpdateGroundArea();
         RefreshEntitiesLists();
     }
+
+    void Update() {
+
+    }
     
     public void RefreshEntitiesLists() {
         if (allyEntity.GetIsEnemy()) {
@@ -68,9 +73,6 @@ public class EntityBehavior : MonoBehaviour
     private void UpdateGroundArea() {
         NavMeshHit hit;
         allyNavMeshAgent.SamplePathPosition(NavMesh.AllAreas, 0, out hit);
-        if (!allyEntity.GetIsEnemy()) {
-            Debug.Log(currentNavMeshMask);
-        }
         if (hit.mask != currentNavMeshMask) {
             currentNavMeshMask = hit.mask;
             if (hit.mask == 1) {
@@ -183,6 +185,7 @@ public class EntityBehavior : MonoBehaviour
             float range = allyEntity.GetRange();
             if (distance <= range && !isEntityObstructed(targetOponent, distance)) {
                 if (!isOnCooldown) {
+                    MoveToGameObject(gameObject);
                     AttackOther(targetOponent, range);
                 }
             }
@@ -199,14 +202,21 @@ public class EntityBehavior : MonoBehaviour
     }
 
     private void AttackOther(GameObject oponent, float range) {
-        if (range<5) {}
-        HealthManager oponentHealth = oponent.GetComponent<HealthManager>();
+        isOnCooldown = true;
         int attack = allyEntity.GetAttack();
         int attackSpeed = allyEntity.GetAttackSpeed();
 
-        oponentHealth.Damage(attack);
-        attacked_enemy.Invoke(attack);
+        if (range>5) {
+            GameObject bullet = Instantiate(entityBullet, transform.position + Vector3.forward*0.5f, transform.rotation);
+            BulletMovment bulletMovment = bullet.GetComponent<BulletMovment>(); 
+            bulletMovment.Init(attack, oponent, gameObject);
+        }
+        else {
+            HealthManager oponentHealth = oponent.GetComponent<HealthManager>();
 
+            oponentHealth.Damage(attack);
+            attacked_enemy.Invoke(attack);
+        }
         StartCoroutine(AttackCooldown(attackSpeed));
     }
 
@@ -217,7 +227,6 @@ public class EntityBehavior : MonoBehaviour
     //Differents corroutines
     IEnumerator AttackCooldown(int cooldown)
     {
-        isOnCooldown = true;
         yield return new WaitForSeconds(cooldown);
         isOnCooldown = false;
     }
@@ -232,7 +241,7 @@ public class EntityBehavior : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         //yield return new WaitForSeconds(0.1f);
-        //GetComponent<Rigidbody>().AddExplosionForce(200, new Vector3(origin.x, origin.y-0.5f, origin.z) , 10, 10);
+        GetComponent<Rigidbody>().AddExplosionForce(200, new Vector3(origin.x, origin.y-0.5f, origin.z) , 10, 10);
     }
     IEnumerator StunnedForSeconds(float cooldown) {
         stunned = true;

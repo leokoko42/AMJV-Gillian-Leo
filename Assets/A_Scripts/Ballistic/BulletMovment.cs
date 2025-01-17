@@ -5,25 +5,25 @@ using UnityEngine.Assertions.Must;
 
 public class BulletMovment : MonoBehaviour
 {
-    float bulletSpeed;
-    [SerializeField] GameObject target;
-    float shooterPos, targetPos, targetVelocity;
-    private float g, y_0, x, z;
-    public float y_Max;
+    public GameObject target, summoner;
+    private float g, y_0, x, z, bulletSpeed;
+    private int attack;
     private Rigidbody bulletRigidbody;
     private bool lauch, autoAim;
+    [SerializeField] private float theta = 20f;
     
+    public void Init(int new_attack, GameObject new_target, GameObject new_summoner) {
+        target = new_target;
+        summoner = new_summoner;
+        attack = new_attack;
+    }
+
     public void Update() {
-        Debug.Log(Vector3.Magnitude(bulletRigidbody.linearVelocity));
+
+    }
+    public void FixedUpdate() {
         if (autoAim) {
             AutoAim();
-        }
-        if (Input.GetMouseButtonDown(0))
-        {
-            transform.position = new Vector3(0, 2, 0);
-            lauch = true;
-            autoAim = false;
-            LaunchBall();
         }
         if (lauch) {
             if (bulletRigidbody.linearVelocity.y<0) {
@@ -39,27 +39,29 @@ public class BulletMovment : MonoBehaviour
         lauch = false;
         bulletRigidbody = GetComponent<Rigidbody>();
         g = 9.8f;
+        LaunchBullet();
     }
 
 
-    void LaunchBall()
+    public void LaunchBullet()
     {
+        lauch = true;
+        autoAim = false;
+        
         Vector3 delta = target.transform.position - transform.position;
         float distance = Vector3.Magnitude(Vector3.ProjectOnPlane(delta, Vector3.up));
         float randomDelta = UnityEngine.Random.value * 0.5f;
-        //Debug.Log(y_Max);
-        float tetha = (20f + randomDelta)* distance / (5 + distance);
-        y_Max = distance / 2 * Mathf.Tan(tetha * Mathf.Deg2Rad);
+        float new_theta = (theta + randomDelta)* distance / (5 + distance);
+        float y_Max = distance / 2 * Mathf.Tan(new_theta * Mathf.Deg2Rad);
 
         y_0 = Math.Max(transform.position.y,target.transform.position.y);
         x = target.transform.position.x - transform.position.x;
         z = target.transform.position.z - transform.position.z;
 
         bulletRigidbody.useGravity = true;
-    
+
         Vector3 displacementXZ = new Vector3(x, 0, z);
 
-        // Implement equations derived from kinematic analysis
         Vector3 velocityY = Vector3.up*Mathf.Sqrt(2*g*(y_Max));
         Vector3 velocityXZ = displacementXZ/(Mathf.Sqrt(2*(y_Max)/g) + Mathf.Sqrt(2*y_Max/g));
         
@@ -75,5 +77,15 @@ public class BulletMovment : MonoBehaviour
         float speed = Vector3.Magnitude(bulletVelocity);
         float t = (1 + speed) / (15 + speed);
         bulletRigidbody.linearVelocity = Vector3.Lerp(bulletVelocity, transform.forward * (bulletSpeed + speed/10), t);
+    }
+
+    public void OnTriggerEnter(Collider collider) {
+        Debug.Log(collider.gameObject);
+        Debug.Log(target);
+        if (collider.gameObject == target) {
+            HealthManager targetHealth = target.GetComponent<HealthManager>();
+            targetHealth.Damage(attack);
+            Destroy(gameObject);
+        }
     }
 }
