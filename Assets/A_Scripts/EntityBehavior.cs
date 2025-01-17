@@ -22,6 +22,14 @@ public class EntityBehavior : MonoBehaviour
     private List<GameObject> allies_list, oponents_list;
     private int currentNavMeshMask;
 
+    public float total_damage_dealt;
+    public float total_damage_taken;
+    public float total_damage_absorbed;
+    public float total_enemies_defeated;
+    public float total_mana_charged;
+    public float total_abilities_used;
+    public float total_health_recovered;
+
     void Start()
     {
         allyEntity = GetComponent<BasicEntity>();
@@ -41,7 +49,14 @@ public class EntityBehavior : MonoBehaviour
         stunned = false;
 
         game_manager = GameObject.Find("GameManager").GetComponent<GameManager>();
-
+        
+        total_damage_dealt = 0;
+        total_damage_taken = 0;
+        total_damage_absorbed = 0;
+        total_enemies_defeated = 0;
+        total_mana_charged = 0;
+        total_abilities_used = 0;
+        total_health_recovered = 0;
         UpdateGroundArea();
         RefreshEntitiesLists();
     }
@@ -214,13 +229,15 @@ public class EntityBehavior : MonoBehaviour
         else {
             HealthManager oponentHealth = oponent.GetComponent<HealthManager>();
 
-            oponentHealth.Damage(attack);
-            attacked_enemy.Invoke(attack);
+            float dmg_dealt = oponentHealth.Damage(attack);
+            ChangeDamageDealt(dmg_dealt);
+            attacked_enemy.Invoke(dmg_dealt);
         }
         StartCoroutine(AttackCooldown(attackSpeed));
     }
 
     private void UseUltimate() {
+        ChangeAbilitiesUsed();
         throw new NotImplementedException();
     }
 
@@ -251,4 +268,34 @@ public class EntityBehavior : MonoBehaviour
         }
         stunned = false;
     }
+
+    public void ChangeDamageDealt(float dmg)
+    {
+        total_damage_dealt += dmg;
+    }
+    public void ChangeDamageTaken(float dmg)
+    {
+        total_damage_taken += dmg;
+    }
+    public void ChangeDamageAbsorbed(float dmg)
+    {
+        total_damage_absorbed += dmg;
+    }
+    public void ChangeEnemiesDefeated()
+    {
+        total_enemies_defeated++;
+    }
+    public void ChangeManaCharged(float mana)
+    {
+        total_mana_charged += mana;
+    }
+    public void ChangeAbilitiesUsed()
+    {
+        total_abilities_used++;
+    }
+    public void ChangeHealthRecovered(float heal)
+    {
+        total_health_recovered += heal;
+    }
+
 }

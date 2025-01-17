@@ -811,7 +811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d6cfe30aa85f7499593736cb5c8897, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActive: 1
+  isActive: 0
   isEnemy: 1
   isKing: 0
   behavior: 0
@@ -880,6 +880,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  damage_absorbed:
+    m_PersistentCalls:
+      m_Calls: []
+  healed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2885097056745959022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -892,11 +898,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9519e2ed93ae1844585cd7d4422c64df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  touchingGround: 0
-  stunned: 0
+  entityBullet: {fileID: 0}
   attacked_enemy:
     m_PersistentCalls:
       m_Calls: []
+  total_damage_dealt: 0
+  total_damage_taken: 0
+  total_damage_absorbed: 0
+  total_enemies_defeated: 0
+  total_mana_charged: 0
+  total_abilities_used: 0
+  total_health_recovered: 0
 --- !u!114 &6574236700469539684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -936,6 +948,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  mana_gain:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!54 &6176574352406469431
 Rigidbody:
   m_ObjectHideFlags: 0
