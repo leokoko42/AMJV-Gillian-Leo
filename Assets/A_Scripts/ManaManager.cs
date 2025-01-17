@@ -6,6 +6,7 @@ public class ManaManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     BasicEntity entity;
     public UnityEvent<float, float> mana_change;
+    public UnityEvent<float> mana_gain;
     private float mana_regen_timer;
     void Start()
     {
@@ -27,14 +28,9 @@ public class ManaManager : MonoBehaviour
     public void addMana(float manaAmount) {
         float entityMana = entity.GetMana();
         float entityMaxMana = entity.GetMaxMana();
-        float newMana = entityMana + manaAmount;
-        if (newMana >= entityMaxMana) {
-            entity.SetMana(entityMaxMana);
-        }
-        else {
-            entity.SetMana(newMana);
-        }
+        float newMana = Mathf.Min(entityMaxMana, entityMana + manaAmount);
         mana_change.Invoke(newMana, entityMaxMana);
+        mana_gain.Invoke(newMana - entityMana);
     }
 
     public void RemoveMana(float manaAmount) {

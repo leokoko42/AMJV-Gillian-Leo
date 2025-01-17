@@ -23,9 +23,11 @@ public class UnitPlacement : MonoBehaviour
         to_spawn_object = null;
         GameObject[] ally_prefabs = gameManager.FindPrefabs("Assets/Prefabs/Entities/Allies");
         entity_occurences = new Dictionary<string, int>();
+        gameManager.entity_max_occurences = new Dictionary<string, int>();
         for (int i = 0; i < ally_prefabs.Length; i++)
         {
             entity_occurences.Add(ally_prefabs[i].name, 0);
+            gameManager.entity_max_occurences.Add(ally_prefabs[i].name, 3);
             Debug.Log(ally_prefabs[i].name);
         }
     }

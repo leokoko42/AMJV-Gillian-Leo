@@ -9,6 +9,8 @@ public class HealthManager : MonoBehaviour
     BasicEntity entity;
     public UnityEvent<float,float> health_change;
     public UnityEvent<float> damaged;
+    public UnityEvent<float> damage_absorbed;
+    public UnityEvent<float> healed;
     private LayerMask layerMask;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,18 +35,15 @@ public class HealthManager : MonoBehaviour
     public void Heal(float healAmount) {
         float entityHp = entity.GetHP();
         float entityMaxHp = entity.GetMaxHP();
-        float newHp = entityHp + healAmount;
-        if (newHp >= entityMaxHp) {
-            entity.SetHP(entityMaxHp);
-        }
-        else {
-            entity.SetHP(newHp);
-        }
+        float newHp = Mathf.Min(entityMaxHp, entityHp + healAmount);
         health_change.Invoke(newHp, entityMaxHp);
+        healed.Invoke(newHp-entityHp);
     }
 
-    public void Damage(float damageAmount) {
+    public float Damage(float damageAmount) {
         float entityHp = entity.GetHP();
+        float absorbed = Mathf.Min(damageAmount, entity.GetDef());
+        damageAmount -= absorbed;
         float newHp = entityHp - damageAmount;
         if (newHp <= 0) {
             Death();
@@ -54,6 +53,8 @@ public class HealthManager : MonoBehaviour
         }
         health_change.Invoke(newHp, entity.GetMaxHP());
         damaged.Invoke(entityHp - newHp);
+        damage_absorbed.Invoke(absorbed);
+        return damageAmount;
     }
 
     void Death() {

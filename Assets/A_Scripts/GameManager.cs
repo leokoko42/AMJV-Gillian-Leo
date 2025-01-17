@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +16,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text round_text;
     [SerializeField] private TMP_Text time_text;
     [SerializeField] private TMP_Text coin_text;
+    // Stats menu
+    [SerializeField] private GameObject stats_panel;
+    [SerializeField] private TMP_Text unit_type;
+    [SerializeField] private TMP_Text damage_dealt;
+    [SerializeField] private TMP_Text damage_taken;
+    [SerializeField] private TMP_Text damage_absorbed;
+    [SerializeField] private TMP_Text enemies_defeated;
+    [SerializeField] private TMP_Text mana_charged;
+    [SerializeField] private TMP_Text abilities_used;
+    [SerializeField] private TMP_Text health_recovered;
+    [SerializeField] private Camera _camera;
+    [SerializeField] private LayerMask layerEntity;
+    private GameObject selected_entity;
 
     public List<GameObject> enemy_list;
     public List<GameObject> ally_list;
@@ -34,7 +48,10 @@ public class GameManager : MonoBehaviour
         enemy_list = new List<GameObject>(enemy_array);
         ally_list = new List<GameObject>(ally_array);
         coins = 100;
-        entity_max_occurences = new() { { "Warrior", 3 }, { "Tank", 3 } };
+        //entity_max_occurences = new() { { "Archer", 3 }, { "Hammer", 3 }, { "Healer", 3 }, { "Monk", 3 }, { "Summoner", 3 }, { "Tank", 3 }, { "Warrior", 3 }, { "Wololo", 3 } };
+
+        stats_panel.SetActive(false);
+        pauseMenu.SetActive(false);
     }
 
     // Update is called once per frame
@@ -45,6 +62,35 @@ public class GameManager : MonoBehaviour
             TogglePause();
         }
         UpdateTime();
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 mousePosition = Input.mousePosition;
+            Ray ray = _camera.ScreenPointToRay(mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerEntity))
+            {
+                if (hit.collider != null && !coin_text.isActiveAndEnabled)
+                {
+                    stats_panel.SetActive(true);
+                    selected_entity = hit.transform.gameObject;
+                }
+            }
+        }
+        if (stats_panel.activeSelf) { UpdateStats(); }
+            
+    }
+
+    void UpdateStats()
+    {
+        EntityBehavior behavior = selected_entity.GetComponent<EntityBehavior>();
+        unit_type.text = selected_entity.name.Replace("(Clone)", "") + " Unit";
+        damage_dealt.text = "Damage Dealt : " + Mathf.Round(behavior.total_damage_dealt).ToString();
+        damage_taken.text = "Damage Taken : " + Mathf.Round(behavior.total_damage_taken).ToString();
+        damage_absorbed.text = "Damage Absorbed : " + Mathf.Round(behavior.total_damage_absorbed).ToString();
+        enemies_defeated.text = "Enemies Defeated : " + Mathf.Round(behavior.total_enemies_defeated).ToString();
+        mana_charged.text = "Mana Charged : " + Mathf.Round(behavior.total_mana_charged).ToString();
+        abilities_used.text = "Abilities Used : " + Mathf.Round(behavior.total_abilities_used).ToString();
+        health_recovered.text = "Health Recovered : " + Mathf.Round(behavior.total_health_recovered).ToString();
     }
 
     void UpdateTime()
@@ -133,11 +179,9 @@ public class GameManager : MonoBehaviour
             if (prefab != null)
             {
                 prefabs.Add(prefab);
-                Debug.Log("Found Prefab: " + prefab.name);
             }
         }
 
-        Debug.Log($"Total Prefabs Found: {prefabs.Count}");
         return prefabs.ToArray();
     }
 }

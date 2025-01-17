@@ -784,7 +784,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4943396, g: 0.4943396, b: 0.4943396, a: 0.5019608}
+  m_Color: {r: 0.5018867, g: 0.5018867, b: 0.5018867, a: 0.5019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -980,6 +980,18 @@ PrefabInstance:
     - target: {fileID: 8051356200399393378, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 450.2248
+      objectReference: {fileID: 0}
+    - target: {fileID: 8650680515095490176, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
+      propertyPath: m_Color.b
+      value: 0.5018867
+      objectReference: {fileID: 0}
+    - target: {fileID: 8650680515095490176, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
+      propertyPath: m_Color.g
+      value: 0.5018867
+      objectReference: {fileID: 0}
+    - target: {fileID: 8650680515095490176, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
+      propertyPath: m_Color.r
+      value: 0.5018867
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
