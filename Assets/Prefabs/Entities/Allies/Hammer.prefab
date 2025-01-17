@@ -270,7 +270,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8590077054684633361, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
       propertyPath: m_Name
-      value: Warrior
+      value: Hammer
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -312,14 +312,14 @@ MonoBehaviour:
   isEnemy: 0
   isKing: 0
   behavior: 0
-  hp: 100
-  maxHP: 100
-  def: 5
-  speed: 3
-  attackSpeed: 1
-  attack: 5
+  hp: 200
+  maxHP: 200
+  def: 6
+  speed: 2
+  attackSpeed: 2.5
+  attack: 40
   mana: 0
-  maxMana: 100
+  maxMana: 200
   cost: 10
   range: 2
   manaRegen: 1

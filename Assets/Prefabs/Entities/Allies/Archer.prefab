@@ -312,14 +312,14 @@ MonoBehaviour:
   isEnemy: 0
   isKing: 0
   behavior: 0
-  hp: 200
-  maxHP: 200
-  def: 5
-  speed: 4
-  attackSpeed: 1
-  attack: 5
+  hp: 150
+  maxHP: 150
+  def: 0
+  speed: 3
+  attackSpeed: 1.5
+  attack: 25
   mana: 0
-  maxMana: 100
+  maxMana: 200
   cost: 10
-  range: 2
+  range: 15
   manaRegen: 1
