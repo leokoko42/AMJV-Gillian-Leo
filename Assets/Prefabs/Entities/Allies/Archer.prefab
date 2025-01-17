@@ -228,6 +228,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6158131214705589896, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
+      propertyPath: entityBullet
+      value: 
+      objectReference: {fileID: 3839250709534061985, guid: 0fa45101d26560f438fbb595ce29d72f, type: 3}
     - target: {fileID: 7392523925521523090, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
