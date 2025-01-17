@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class BasicEntity : Entity
 {
-    [SerializeField] protected int manaRegen;
+    [SerializeField] protected float manaRegen;
 
-    public override int GetAttack()
+    public override float GetAttack()
     {
         return this.attack;
     }
 
-    public override int GetAttackSpeed()
+    public override float GetAttackSpeed()
     {
         return this.attackSpeed;
     }
@@ -24,12 +24,12 @@ public class BasicEntity : Entity
         return this.cost;
     }
 
-    public override int GetDef()
+    public override float GetDef()
     {
         return this.def;
     }
 
-    public override int GetHP()
+    public override float GetHP()
     {
         return this.hp;
     }
@@ -49,17 +49,17 @@ public class BasicEntity : Entity
         return this.isKing;
     }
 
-    public override int GetMana()
+    public override float GetMana()
     {
         return this.mana;
     }
 
-    public override int GetMaxHP()
+    public override float GetMaxHP()
     {
         return this.maxHP;
     }
 
-    public override int GetMaxMana()
+    public override float GetMaxMana()
     {
         return this.maxMana;
     }
@@ -69,22 +69,22 @@ public class BasicEntity : Entity
         return this.range;
     }
 
-    public override int GetSpeed()
+    public override float GetSpeed()
     {
         return this.speed;
     }
-    public int GetManaRegen()
+    public float GetManaRegen()
     {
         return this.manaRegen;
     }
 
 
-    public override void SetAttack(int newAttack)
+    public override void SetAttack(float newAttack)
     {
         this.attack = newAttack;
     }
 
-    public override void SetAttackSpeed(int newAttackSpeed)
+    public override void SetAttackSpeed(float newAttackSpeed)
     {
         this.attackSpeed = newAttackSpeed;
     }
@@ -99,12 +99,12 @@ public class BasicEntity : Entity
         this.cost = newCost;
     }
 
-    public override void SetDef(int newDef)
+    public override void SetDef(float newDef)
     {
         this.def = newDef;
     }
 
-    public override void SetHP(int newHP)
+    public override void SetHP(float newHP)
     {
         this.hp = newHP;
     }
@@ -124,31 +124,31 @@ public class BasicEntity : Entity
         this.isKing = newIsKing;
     }
 
-    public override void SetMana(int newMana)
+    public override void SetMana(float newMana)
     {
         this.mana = newMana;
     }
 
-    public override void SetMaxHP(int newMaxHP)
+    public override void SetMaxHP(float newMaxHP)
     {
         this.maxHP = newMaxHP;
     }
 
-    public override void SetMaxMana(int newMaxMana)
+    public override void SetMaxMana(float newMaxMana)
     {
         this.maxMana = newMaxMana;
     }
 
-    public override void SetRange(int newRange)
+    public override void SetRange(float newRange)
     {
         this.range = newRange;
     }
 
-    public override void SetSpeed(int newSpeed)
+    public override void SetSpeed(float newSpeed)
     {
         this.speed = newSpeed;
     }
-    public void SetManaRegen(int newManaRegen)
+    public void SetManaRegen(float newManaRegen)
     {
         this.manaRegen = newManaRegen;
     }

@@ -30,10 +30,10 @@ public class HealthManager : MonoBehaviour
         }
     }
 
-    public void Heal(int healAmount) {
-        int entityHp = entity.GetHP();
-        int entityMaxHp = entity.GetMaxHP();
-        int newHp = entityHp + healAmount;
+    public void Heal(float healAmount) {
+        float entityHp = entity.GetHP();
+        float entityMaxHp = entity.GetMaxHP();
+        float newHp = entityHp + healAmount;
         if (newHp >= entityMaxHp) {
             entity.SetHP(entityMaxHp);
         }
@@ -43,9 +43,9 @@ public class HealthManager : MonoBehaviour
         health_change.Invoke(newHp, entityMaxHp);
     }
 
-    public void Damage(int damageAmount) {
-        int entityHp = entity.GetHP();
-        int newHp = entityHp - damageAmount;
+    public void Damage(float damageAmount) {
+        float entityHp = entity.GetHP();
+        float newHp = entityHp - damageAmount;
         if (newHp <= 0) {
             Death();
         }

@@ -24,10 +24,10 @@ public class ManaManager : MonoBehaviour
         mana_regen_timer += Time.deltaTime;
     }
 
-    public void addMana(int manaAmount) {
-        int entityMana = entity.GetMana();
-        int entityMaxMana = entity.GetMaxMana();
-        int newMana = entityMana + manaAmount;
+    public void addMana(float manaAmount) {
+        float entityMana = entity.GetMana();
+        float entityMaxMana = entity.GetMaxMana();
+        float newMana = entityMana + manaAmount;
         if (newMana >= entityMaxMana) {
             entity.SetMana(entityMaxMana);
         }
@@ -37,9 +37,9 @@ public class ManaManager : MonoBehaviour
         mana_change.Invoke(newMana, entityMaxMana);
     }
 
-    public void RemoveMana(int manaAmount) {
-        int entityMana = entity.GetMana();
-        int newMana = entityMana - manaAmount;
+    public void RemoveMana(float manaAmount) {
+        float entityMana = entity.GetMana();
+        float newMana = entityMana - manaAmount;
         if (newMana <= 0) {
             entity.SetMana(0);
         }
@@ -51,11 +51,11 @@ public class ManaManager : MonoBehaviour
 
     public void ManaOnDamageRecieved(float value)
     {
-        addMana((int)value / 2);
+        addMana(value / 2);
     }
 
     public void ManaOnDamageDealt(float value)
     {
-        addMana((int)value / 3);
+        addMana(value / 3);
     }
 }

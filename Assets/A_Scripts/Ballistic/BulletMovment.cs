@@ -6,13 +6,12 @@ using UnityEngine.Assertions.Must;
 public class BulletMovment : MonoBehaviour
 {
     public GameObject target, summoner;
-    private float g, y_0, x, z, bulletSpeed;
-    private int attack;
+    private float g, y_0, x, z, bulletSpeed, attack;
     private Rigidbody bulletRigidbody;
     private bool lauch, autoAim;
     [SerializeField] private float theta = 20f;
     
-    public void Init(int new_attack, GameObject new_target, GameObject new_summoner) {
+    public void Init(float new_attack, GameObject new_target, GameObject new_summoner) {
         target = new_target;
         summoner = new_summoner;
         attack = new_attack;

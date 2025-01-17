@@ -203,8 +203,8 @@ public class EntityBehavior : MonoBehaviour
 
     private void AttackOther(GameObject oponent, float range) {
         isOnCooldown = true;
-        int attack = allyEntity.GetAttack();
-        int attackSpeed = allyEntity.GetAttackSpeed();
+        float attack = allyEntity.GetAttack();
+        float attackSpeed = allyEntity.GetAttackSpeed();
 
         if (range>5) {
             GameObject bullet = Instantiate(entityBullet, transform.position + Vector3.forward*0.5f, transform.rotation);
@@ -225,7 +225,7 @@ public class EntityBehavior : MonoBehaviour
     }
 
     //Differents corroutines
-    IEnumerator AttackCooldown(int cooldown)
+    IEnumerator AttackCooldown(float cooldown)
     {
         yield return new WaitForSeconds(cooldown);
         isOnCooldown = false;
