@@ -921,6 +921,22 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5175263345216545167, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.46
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175263345216545167, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.88
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175263345216545167, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 455.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175263345216545167, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -424.74817
+      objectReference: {fileID: 0}
     - target: {fileID: 5681319800031397463, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
       propertyPath: coin_text
       value: 

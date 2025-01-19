@@ -22,6 +22,10 @@ public class EntityBehavior : MonoBehaviour
     private List<GameObject> allies_list, oponents_list;
     private int currentNavMeshMask;
 
+    private GameObject crown;
+    private GameObject health_bar;
+    private GameObject mana_bar;
+
     public float total_damage_dealt;
     public float total_damage_taken;
     public float total_damage_absorbed;
@@ -49,7 +53,12 @@ public class EntityBehavior : MonoBehaviour
         stunned = false;
 
         game_manager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        
+
+        crown = GameObject.Find("Crown");
+        crown.SetActive(false);
+        health_bar = GameObject.Find("HealthBar");
+        mana_bar = GameObject.Find("ManaBar");
+
         total_damage_dealt = 0;
         total_damage_taken = 0;
         total_damage_absorbed = 0;
@@ -267,6 +276,24 @@ public class EntityBehavior : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         stunned = false;
+    }
+
+    public void AddCrown()
+    {
+        crown.SetActive(true);
+        Vector3 hb_pos = health_bar.transform.position;
+        health_bar.transform.position = new Vector3(hb_pos.x, hb_pos.y+25, hb_pos.z);
+        Vector3 mb_pos = mana_bar.transform.position;
+        mana_bar.transform.position = new Vector3(mb_pos.x, mb_pos.y + 25, mb_pos.z);
+    }
+
+    public void RemoveCrown()
+    {
+        crown.SetActive(false);
+        Vector3 hb_pos = health_bar.transform.position;
+        health_bar.transform.position = new Vector3(hb_pos.x, hb_pos.y - 25, hb_pos.z);
+        Vector3 mb_pos = mana_bar.transform.position;
+        mana_bar.transform.position = new Vector3(mb_pos.x, mb_pos.y - 25, mb_pos.z);
     }
 
     public void ChangeDamageDealt(float dmg)
