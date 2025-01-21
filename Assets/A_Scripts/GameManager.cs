@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     public List<GameObject> enemy_list;
     public List<GameObject> ally_list;
     public Dictionary<string, int> entity_max_occurences;
+    public GameObject ally_king;
 
     public int coins;
     private float start_time;
@@ -158,6 +159,18 @@ public class GameManager : MonoBehaviour
     public void RemoveAlly(GameObject a)
     {
         ally_list.Remove(a);
+    }
+
+    public void SetAllyKing(GameObject k)
+    {
+        if (ally_king != null) 
+        { 
+            ally_king.GetComponent<BasicEntity>().SetIsKing(false);
+            ally_king.GetComponent<EntityBehavior>().RemoveCrown();
+        }
+        ally_king = k;
+        k.GetComponent<BasicEntity>().SetIsKing(true);
+        k.GetComponent<EntityBehavior>().AddCrown();
     }
 
     public GameObject[] FindPrefabs(string folderPath)

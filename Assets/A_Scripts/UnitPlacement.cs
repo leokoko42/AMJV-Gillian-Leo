@@ -73,6 +73,20 @@ public class UnitPlacement : MonoBehaviour
                 }
             }
         }
+
+        if (Input.GetMouseButtonDown(2))
+        {
+            Vector3 mousePosition = Input.mousePosition;
+            Ray ray = _camera.ScreenPointToRay(mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerEntity))
+            {
+                if (hit.collider != null)
+                {
+                    GameObject entity = hit.transform.gameObject;
+                    gameManager.SetAllyKing(entity);
+                }
+            }
+        }
     }
 
     public void UnitToSpawn(GameObject entity_obj)

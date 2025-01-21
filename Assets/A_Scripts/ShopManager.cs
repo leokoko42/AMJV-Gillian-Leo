@@ -39,9 +39,12 @@ public class ShopManager : MonoBehaviour
         {
             // Instantiate a new button from the prefab
             GameObject newButton = Instantiate(button_prefab, parent_panel);
-
+            RectTransform rectTransform = newButton.GetComponent<RectTransform>();
             // Set the button's position (optional, handled by layout components if used)
-            newButton.transform.localPosition = new Vector3(0, 370 - 700/(n_prefabs-1) * i, 0);
+            rectTransform.anchorMin = new Vector3(0.5f, 0.88f - (0.88f - 0.2f) / (n_prefabs - 1) * i);
+            rectTransform.anchorMax = new Vector3(0.5f, 0.88f - (0.88f - 0.2f) / (n_prefabs - 1) * i);
+            rectTransform.anchoredPosition = Vector2.zero;
+            //newButton.transform.localPosition = new Vector3(0, 370 - 700/(n_prefabs-1) * i, 0);
 
             // Change the button's text
             TMP_Text buttonText = newButton.GetComponentInChildren<TMP_Text>();
