@@ -22,6 +22,7 @@ public class EntityBehavior : MonoBehaviour
     private Entity.Behavior entityBehavior;
     private List<GameObject> allies_list, oponents_list;
     private int currentNavMeshMask;
+    private float entity_speed;
 
     [SerializeField] private GameObject crown;
     [SerializeField] private GameObject health_bar;
@@ -45,12 +46,16 @@ public class EntityBehavior : MonoBehaviour
 
         allyRigidBody = GetComponent<Rigidbody>();
 
+        // A mettre en public dans le game Manager ?
         layerMaskWalls = LayerMask.GetMask("Walls");
         layerMaskGround = LayerMask.GetMask("Ground");
+        // ----
+
         isOnCooldown = false;
 
+        entity_speed = allyEntity.GetSpeed();
+
         allyNavMeshAgent = GetComponent<NavMeshAgent>();
-        allyNavMeshAgent.speed = allyEntity.GetSpeed();
         allyNavMeshAgent.stoppingDistance = allyEntity.GetRange();
 
         touchingGround = true;
@@ -72,7 +77,8 @@ public class EntityBehavior : MonoBehaviour
         total_mana_charged = 0;
         total_abilities_used = 0;
         total_health_recovered = 0;
-        UpdateGroundArea();
+
+        UpdateGroundAreaType();
         RefreshEntitiesLists();
     }
 
@@ -92,24 +98,29 @@ public class EntityBehavior : MonoBehaviour
     }
 
     void FixedUpdate() {
+        // Update que si le manager le fait sinon useless
         RefreshEntitiesLists();
+        // --
+
         UpdateEntityMovement();
     }
 
     private void UpdateIsOnGround() {
-        touchingGround = Physics.Raycast(transform.position, -Vector3.up, 0.6f, layerMaskGround);
+        touchingGround = Physics.Raycast(transform.position, -Vector3.up, 0.7f, layerMaskGround);
     }
 
-    private void UpdateGroundArea() {
+    private void UpdateGroundAreaType() {
         NavMeshHit hit;
         allyNavMeshAgent.SamplePathPosition(NavMesh.AllAreas, 0, out hit);
         if (hit.mask != currentNavMeshMask) {
             currentNavMeshMask = hit.mask;
-            if (hit.mask == 1) {
-                allyNavMeshAgent.speed = 3;
+            if (hit.mask == 1) //On grass ground
+            {
+                allyNavMeshAgent.speed = entity_speed;
             }
-            else if (hit.mask == 8) {
-                allyNavMeshAgent.speed = 1;
+            else if (hit.mask == 8) //On sand ground
+            {
+                allyNavMeshAgent.speed = entity_speed * 0.5f;
             }
         }
     }
@@ -130,16 +141,19 @@ public class EntityBehavior : MonoBehaviour
         }
     }
     private (GameObject,float) getClosestOponentOfKing(List<GameObject> oponents, List<GameObject> allies) {
+        // A changer avec le gameManager
         (GameObject allyKing, float kingDistance) = getKingOf(allies);
-
         EntityBehavior allyKingBehavior = allyKing.GetComponent<EntityBehavior>();
+        // -----
         (GameObject allyKingClosestOponent, float oponentDistanceFromKing) = allyKingBehavior.getClosestOponent(oponents);
         float distance = Vector3.Distance(transform.position, allyKingClosestOponent.transform.position);
         return (allyKingClosestOponent, distance);
     }
+
+    // A changer pour éviter un trop grand nombre de raycast ?
     private (GameObject,float) getClosestOponent(List<GameObject> oponents) {
-        float minDistanceNotObstructed = -1f; 
-        float minDistanceObstructed = -1f;
+        float minDistanceNotObstructed = float.PositiveInfinity; 
+        float minDistanceObstructed = float.PositiveInfinity;
         GameObject closestOponentNotObstructed = null;
         GameObject closestOponentObstructed = null;
 
@@ -150,13 +164,13 @@ public class EntityBehavior : MonoBehaviour
             bool isObstructed = isEntityObstructed(oponent, distance);
            
             if (isObstructed) {
-                if (minDistanceObstructed == -1f || distance < minDistanceObstructed) {
+                if (distance < minDistanceObstructed) {
                     closestOponentObstructed = oponent;
                     minDistanceObstructed = distance;
                 }
             }
             else {
-                if (minDistanceNotObstructed == -1f || distance < minDistanceNotObstructed) {
+                if (distance < minDistanceNotObstructed) {
                     closestOponentNotObstructed = oponent;
                     minDistanceNotObstructed = distance;
                 }
@@ -172,16 +186,20 @@ public class EntityBehavior : MonoBehaviour
 
     private bool isEntityObstructed(GameObject entity, float distance) {
         Vector3 rayDirection =  entity.transform.position-transform.position;
+        // Mettre un transform pour la position des yeux sur le long terme 
         Vector3 rayOrigin = transform.position + new Vector3(0, 0.5f, 0);
+
+        /*
         if (Physics.Raycast(rayOrigin, rayDirection, distance, layerMaskWalls)) {
             Debug.DrawRay(rayOrigin, rayDirection, Color.red);
         }
-        else {Debug.DrawRay(rayOrigin, rayDirection, Color.green);}
+        else {Debug.DrawRay(rayOrigin, rayDirection, Color.green);}*/
 
         bool isObstructed = Physics.Raycast(rayOrigin, rayDirection, distance, layerMaskWalls);
         return isObstructed;
     }
 
+    // A déplacer dans GameManager
     private (GameObject,float) getKingOf(List<GameObject> entities) {
         foreach (GameObject entity in entities) {
             BasicEntity oponentEntity = entity.GetComponent<BasicEntity>();
@@ -196,7 +214,7 @@ public class EntityBehavior : MonoBehaviour
     //Methods designed to dictate the actions of the Entity
     public void UpdateEntityMovement() {
         UpdateIsOnGround();
-        if (stunned || !allyEntity.GetIsActive()) 
+        if (stunned || !allyEntity.GetIsActive()) //Enable the rigidbody & physics
         {
             if (allyNavMeshAgent.enabled) {
                 allyNavMeshAgent.enabled = false;
@@ -204,10 +222,10 @@ public class EntityBehavior : MonoBehaviour
             }
             return;
         }
-        else 
+        else
         {
             allyNavMeshAgent.enabled = true;
-            UpdateGroundArea();
+            UpdateGroundAreaType();
             GameObject targetOponent;
             float distance;
 
@@ -215,7 +233,7 @@ public class EntityBehavior : MonoBehaviour
             float range = allyEntity.GetRange();
             if (distance <= range && !isEntityObstructed(targetOponent, distance)) {
                 if (!isOnCooldown) {
-                    MoveToGameObject(gameObject);
+                    MoveToGameObject(gameObject); //Maybe use a better alternative to stop the movement ?
                     AttackOther(targetOponent, range);
                 }
             }
@@ -232,23 +250,30 @@ public class EntityBehavior : MonoBehaviour
     }
 
     private void AttackOther(GameObject oponent, float range) {
-        isOnCooldown = true;
         float attack = allyEntity.GetAttack();
         float attackSpeed = allyEntity.GetAttackSpeed();
 
-        if (range>5) {
-            GameObject bullet = Instantiate(entityBullet, transform.position + Vector3.forward*0.5f, transform.rotation);
-            BulletMovment bulletMovment = bullet.GetComponent<BulletMovment>(); 
-            bulletMovment.Init(attack, oponent, gameObject);
+        if (range>5) { //Add a bool variable to ensure if an entity is ranged or not ?
+            RangedAttack(oponent, attack);
         }
         else {
-            HealthManager oponentHealth = oponent.GetComponent<HealthManager>();
-
-            float dmg_dealt = oponentHealth.Damage(attack);
-            ChangeDamageDealt(dmg_dealt);
-            attacked_enemy.Invoke(dmg_dealt);
+            MeleeAttack(oponent, attack);
         }
         StartCoroutine(AttackCooldown(attackSpeed));
+    }
+
+    private void RangedAttack(GameObject oponent, float attack) {
+        GameObject bullet = Instantiate(entityBullet, transform.position + Vector3.forward*0.5f, transform.rotation);
+        BulletMovment bulletMovment = bullet.GetComponent<BulletMovment>(); 
+        bulletMovment.Init(attack, oponent, gameObject);
+    }
+
+    private void MeleeAttack(GameObject oponent, float attack) {
+        HealthManager oponentHealth = oponent.GetComponent<HealthManager>();
+
+        float dmg_dealt = oponentHealth.Damage(attack);
+        ChangeDamageDealt(dmg_dealt);
+        attacked_enemy.Invoke(dmg_dealt);
     }
 
     private void UseUltimate() {
@@ -259,6 +284,7 @@ public class EntityBehavior : MonoBehaviour
     //Differents corroutines
     IEnumerator AttackCooldown(float cooldown)
     {
+        isOnCooldown = true;
         yield return new WaitForSeconds(cooldown);
         isOnCooldown = false;
     }
@@ -269,10 +295,10 @@ public class EntityBehavior : MonoBehaviour
 
     IEnumerator Knockback(Vector3 origin, float stunCooldown) {
         StartCoroutine(StunnedForSeconds(stunCooldown));
-        while (allyNavMeshAgent.enabled) {
+        /*while (allyNavMeshAgent.enabled) {
             yield return new WaitForSeconds(0.1f);
-        }
-        //yield return new WaitForSeconds(0.1f);
+        }*/
+        yield  return new WaitForSeconds(0f);
         GetComponent<Rigidbody>().AddExplosionForce(200, new Vector3(origin.x, origin.y-0.5f, origin.z) , 10, 10);
     }
     IEnumerator StunnedForSeconds(float cooldown) {

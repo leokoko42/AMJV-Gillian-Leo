@@ -27,7 +27,7 @@ public class HealthManager : MonoBehaviour
     }
 
     void FixedUpdate() {
-        if (transform.position.y < -10) {
+        if (transform.position.y < -50) {
             Death();
         }
     }
@@ -57,12 +57,14 @@ public class HealthManager : MonoBehaviour
         return damageAmount;
     }
 
-    void Death() {
+    public void Death() {
+        /* Test de KnockBack
         Vector3 delta = new Vector3(0,1,0);
         Collider[] colliders = Physics.OverlapCapsule(transform.position - delta, transform.position + delta, 5f, layerMask);
         foreach (Collider collider in colliders) {
             collider.GetComponent<EntityBehavior>().ApplyKnockback(transform.position, 3);
         }
+        */
 
         if (GetComponent<BasicEntity>().GetIsEnemy()) {
             gameManager.RemoveEnemy(gameObject);

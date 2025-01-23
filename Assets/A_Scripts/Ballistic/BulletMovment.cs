@@ -79,8 +79,6 @@ public class BulletMovment : MonoBehaviour
     }
 
     public void OnTriggerEnter(Collider collider) {
-        Debug.Log(collider.gameObject);
-        Debug.Log(target);
         if (collider.gameObject == target) {
             HealthManager targetHealth = target.GetComponent<HealthManager>();
             targetHealth.Damage(attack);

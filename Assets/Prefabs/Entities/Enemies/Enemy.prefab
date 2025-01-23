@@ -815,10 +815,10 @@ MonoBehaviour:
   isEnemy: 1
   isKing: 0
   behavior: 0
-  hp: 30
-  maxHP: 30
-  def: 0
-  speed: 2
+  hp: 300
+  maxHP: 300
+  def: 10
+  speed: 3
   attackSpeed: 1
   attack: 5
   mana: 0
