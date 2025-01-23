@@ -37,6 +37,9 @@ public class GameManager : MonoBehaviour
 
     public int coins;
     private float start_time;
+
+    private bool shop_active;
+    private bool game_active;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -53,6 +56,9 @@ public class GameManager : MonoBehaviour
 
         stats_panel.SetActive(false);
         pauseMenu.SetActive(false);
+
+        shop_active = true;
+        game_active = false;
     }
 
     // Update is called once per frame
@@ -167,6 +173,7 @@ public class GameManager : MonoBehaviour
         { 
             ally_king.GetComponent<BasicEntity>().SetIsKing(false);
             ally_king.GetComponent<EntityBehavior>().RemoveCrown();
+            ally_king = null;
         }
         ally_king = k;
         k.GetComponent<BasicEntity>().SetIsKing(true);
@@ -196,5 +203,25 @@ public class GameManager : MonoBehaviour
         }
 
         return prefabs.ToArray();
+    }
+
+    public bool GetShopActive()
+    {
+        return shop_active;
+    }
+
+    public void SetShopActive(bool b)
+    {
+        shop_active = b;
+    }
+
+    public bool GetGameActive()
+    {
+        return game_active;
+    }
+
+    public void SetGameActive(bool b)
+    {
+        game_active = b;
     }
 }

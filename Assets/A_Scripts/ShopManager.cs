@@ -16,6 +16,8 @@ public class ShopManager : MonoBehaviour
     public UnityEvent<GameObject> change_spawn;
     private GameObject[] ally_prefabs;
 
+    private GameObject selected_entity;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -79,6 +81,24 @@ public class ShopManager : MonoBehaviour
             BasicEntity enemy_behavior = enemy.GetComponent<BasicEntity>();
             enemy_behavior.SetIsActive(true);
         }
+        DeselectEntity();
+        gameManager.SetShopActive(false);
+        gameManager.SetGameActive(true);
         shop.SetActive(false);
     }
+
+    public void SetSelectedEntity(GameObject entity)
+    {
+        DeselectEntity();
+        selected_entity = entity;
+        selected_entity.GetComponent<EntityBehavior>().ShowMenu();
+    }
+
+    public void DeselectEntity()
+    {
+        if (selected_entity != null) { selected_entity.GetComponent<EntityBehavior>().HideMenu(); }
+        selected_entity = null;
+    }
+
+    public GameObject GetSelectedEntity() { return selected_entity; }
 }
