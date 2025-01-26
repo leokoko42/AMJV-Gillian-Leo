@@ -71,20 +71,23 @@ public class ShopManager : MonoBehaviour
 
     void StartBattle()
     {
-        foreach (GameObject ally in gameManager.ally_list)
+        if (gameManager.ally_king != null)
         {
-            BasicEntity ally_behavior = ally.GetComponent<BasicEntity>();
-            ally_behavior.SetIsActive(true);
+            foreach (GameObject ally in gameManager.ally_list)
+            {
+                BasicEntity ally_behavior = ally.GetComponent<BasicEntity>();
+                ally_behavior.SetIsActive(true);
+            }
+            foreach (GameObject enemy in gameManager.enemy_list)
+            {
+                BasicEntity enemy_behavior = enemy.GetComponent<BasicEntity>();
+                enemy_behavior.SetIsActive(true);
+            }
+            DeselectEntity();
+            gameManager.SetShopActive(false);
+            gameManager.SetGameActive(true);
+            shop.SetActive(false);
         }
-        foreach (GameObject enemy in gameManager.enemy_list)
-        {
-            BasicEntity enemy_behavior = enemy.GetComponent<BasicEntity>();
-            enemy_behavior.SetIsActive(true);
-        }
-        DeselectEntity();
-        gameManager.SetShopActive(false);
-        gameManager.SetGameActive(true);
-        shop.SetActive(false);
     }
 
     public void SetSelectedEntity(GameObject entity)

@@ -9,12 +9,10 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private GameObject pauseMenu;
-    [SerializeField] private Button resume;
-    [SerializeField] private Button quit;
-    [SerializeField] private Button settings;
+    [SerializeField] private GameObject gameUI;
     [SerializeField] private TMP_Text round_text;
     [SerializeField] private TMP_Text time_text;
+    [SerializeField] private TMP_Text enemies_text;
     [SerializeField] private TMP_Text coin_text;
     // Stats menu
     [SerializeField] private GameObject stats_panel;
@@ -30,35 +28,42 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LayerMask layerEntity;
     private GameObject selected_entity;
 
+    [SerializeField] private DataHolder data;
+
+    private bool shop_active;
+    private bool game_active;
+
+    private int coins_on_win;
+    [SerializeField] private GameObject victoryScreen;
+
+    [SerializeField] private GameObject uiButtons;
+    [SerializeField] private Button pauseButton;
+    [SerializeField] private Button settingsButton;
+    [SerializeField] private Button quitButton;
+    [SerializeField] private GameObject pauseText;
+
     public List<GameObject> enemy_list;
     public List<GameObject> ally_list;
     public Dictionary<string, int> entity_max_occurences;
     public GameObject ally_king;
 
-    public int coins;
-    private float start_time;
-
-    private bool shop_active;
-    private bool game_active;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        resume.onClick.AddListener(TogglePause);
-        quit.onClick.AddListener(QuitGame);
-        settings.onClick.AddListener(SettingsMenu);
-        start_time = Time.time;
         GameObject[] enemy_array = GameObject.FindGameObjectsWithTag("Enemies");
         GameObject[] ally_array = GameObject.FindGameObjectsWithTag("Allies");
         enemy_list = new List<GameObject>(enemy_array);
         ally_list = new List<GameObject>(ally_array);
-        coins = 100;
-        //entity_max_occurences = new() { { "Archer", 3 }, { "Hammer", 3 }, { "Healer", 3 }, { "Monk", 3 }, { "Summoner", 3 }, { "Tank", 3 }, { "Warrior", 3 }, { "Wololo", 3 } };
 
         stats_panel.SetActive(false);
-        pauseMenu.SetActive(false);
 
         shop_active = true;
         game_active = false;
+
+        pauseButton.onClick.AddListener(PauseOrResume);
+        settingsButton.onClick.AddListener(SettingsMenu);
+        quitButton.onClick.AddListener(QuitGame);
+        pauseText.SetActive(false);
     }
 
     // Update is called once per frame
@@ -66,9 +71,10 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            TogglePause();
+            PauseOrResume();
         }
         UpdateTime();
+        enemies_text.text = "Enemies Left : " + enemy_list.Count.ToString();
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -84,7 +90,10 @@ public class GameManager : MonoBehaviour
             }
         }
         if (stats_panel.activeSelf) { UpdateStats(); }
-            
+        if (enemy_list.Count == 0)
+        {
+            Victory();
+        }
     }
 
     void UpdateStats()
@@ -102,7 +111,7 @@ public class GameManager : MonoBehaviour
 
     void UpdateTime()
     {
-        int time_elapsed = (int)(Time.time - start_time);
+        int time_elapsed = (int)(Time.time - data.GetStartTime());
         int seconds = time_elapsed % 60;
         int minutes = (time_elapsed / 60) % 60;
         int hours = time_elapsed / 3600;
@@ -122,29 +131,14 @@ public class GameManager : MonoBehaviour
 
     public void AddCoins(int amount)
     {
-        coins += amount;
-        coin_text.text = coins.ToString();
+        data.SetCoins( data.GetCoins() + amount);
+        coin_text.text = data.GetCoins().ToString();
     }
 
     public void RemoveCoins(int amount)
     {
-        coins -= amount;
-        coin_text.text = coins.ToString();
-    }
-
-    void TogglePause()
-    {
-        pauseMenu.SetActive(!pauseMenu.activeSelf);
-    }
-
-    void SettingsMenu()
-    {
-
-    }
-
-    void QuitGame()
-    {
-        Application.Quit();
+        data.SetCoins(data.GetCoins() - amount);
+        coin_text.text = data.GetCoins().ToString();
     }
 
     public void AddEnemy(GameObject e)
@@ -223,5 +217,32 @@ public class GameManager : MonoBehaviour
     public void SetGameActive(bool b)
     {
         game_active = b;
+        uiButtons.SetActive(b);
+    }
+
+    public int GetCoinsOnWin() { return coins_on_win; }
+
+    private void Victory()
+    {
+        SetGameActive(false);
+        victoryScreen.SetActive(true);
+        gameUI.SetActive(false);
+    }
+
+    private void PauseOrResume()
+    {
+        Debug.Log("1");
+        Time.timeScale = 1.0f - Time.timeScale;
+        pauseText.SetActive(!pauseText.activeSelf);
+    }
+
+    private void SettingsMenu()
+    {
+        Debug.Log("2");
+    }
+    void QuitGame()
+    {
+        Debug.Log("3");
+        Application.Quit();
     }
 }

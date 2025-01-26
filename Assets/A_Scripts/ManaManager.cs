@@ -16,19 +16,23 @@ public class ManaManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float mana_delay = 1f / entity.GetManaRegen();
-        if (mana_regen_timer > mana_delay)
+        if (entity.GetIsActive())
         {
-            addMana(1);
-            mana_regen_timer -= mana_delay;
+            float mana_delay = 1f / entity.GetManaRegen();
+            if (mana_regen_timer > mana_delay)
+            {
+                addMana(1);
+                mana_regen_timer -= mana_delay;
+            }
+            mana_regen_timer += Time.deltaTime;
         }
-        mana_regen_timer += Time.deltaTime;
     }
 
     public void addMana(float manaAmount) {
         float entityMana = entity.GetMana();
         float entityMaxMana = entity.GetMaxMana();
         float newMana = Mathf.Min(entityMaxMana, entityMana + manaAmount);
+        entity.SetMana(newMana);
         mana_change.Invoke(newMana, entityMaxMana);
         mana_gain.Invoke(newMana - entityMana);
     }

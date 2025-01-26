@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 
 public class UnitPlacement : MonoBehaviour
 {
+    [SerializeField] private DataHolder data;
     [SerializeField] private GameManager gameManager;
     [SerializeField] private ShopManager shopManager;
     [SerializeField] private Camera _camera;
@@ -56,7 +57,7 @@ public class UnitPlacement : MonoBehaviour
                     Vector3 spawn_pos = new Vector3(point.x, point.y + 1.5f, point.z);
                     if (to_spawn_object != null)
                     {
-                        if (spawn_cost <= gameManager.coins && entity_occurences[to_spawn_name] < gameManager.entity_max_occurences[to_spawn_name])
+                        if (spawn_cost <= data.GetCoins() && entity_occurences[to_spawn_name] < gameManager.entity_max_occurences[to_spawn_name])
                         {
                             GameObject entity = Instantiate(to_spawn_object, spawn_pos, Quaternion.identity);
                             BasicEntity basicEntity = entity.GetComponent<BasicEntity>();
