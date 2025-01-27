@@ -193,6 +193,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d4dfb6ce4d0d094585073280882b821, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scale: 0
+  scale_at_10u: 0
+  hideOnStart: {fileID: 0}
 --- !u!114 &491959932923301493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -649,6 +652,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d4dfb6ce4d0d094585073280882b821, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scale: 0
+  scale_at_10u: 0
+  hideOnStart: {fileID: 0}
 --- !u!114 &8540078952039154728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -678,6 +684,7 @@ GameObject:
   - component: {fileID: 5507245550275981327}
   - component: {fileID: 2885097056745959022}
   - component: {fileID: 6574236700469539684}
+  - component: {fileID: 6017701709652598059}
   - component: {fileID: 6176574352406469431}
   m_Layer: 7
   m_Name: Enemy
@@ -898,7 +905,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9519e2ed93ae1844585cd7d4422c64df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ability: 0
   entityBullet: {fileID: 0}
+  allyEntity: {fileID: 8764851698418899328}
+  allyRigidBody: {fileID: 6176574352406469431}
+  allyAbility: {fileID: 6017701709652598059}
+  allyNavMeshAgent: {fileID: 505205278999401064}
+  stunned: 0
+  isOnCooldown: 0
+  touchingGround: 0
   attacked_enemy:
     m_PersistentCalls:
       m_Calls: []
@@ -909,6 +924,16 @@ MonoBehaviour:
   total_mana_charged: 0
   total_abilities_used: 0
   total_health_recovered: 0
+  crown: {fileID: 0}
+  health_bar: {fileID: 0}
+  mana_bar: {fileID: 0}
+  behavior_menu: {fileID: 0}
+  show_menu:
+    m_PersistentCalls:
+      m_Calls: []
+  hide_menu:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &6574236700469539684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -951,6 +976,21 @@ MonoBehaviour:
   mana_gain:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6017701709652598059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8590077054684633361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a68d3123513b9b41ba5869200ca6b8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalWarriorMaterial: {fileID: 2100000, guid: d3ae65387bfb28d47adb5c3e21e75569, type: 2}
+  rageWarriorMaterial: {fileID: 2100000, guid: 5915e041f42f045438be5124f4024e79, type: 2}
+  abilityMultiplier: 1
 --- !u!54 &6176574352406469431
 Rigidbody:
   m_ObjectHideFlags: 0

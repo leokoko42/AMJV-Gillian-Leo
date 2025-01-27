@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BasicEntity : Entity
@@ -154,15 +155,73 @@ public class BasicEntity : Entity
     }
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private List<float> attackMultiplier = new List<float>();
+    private List<float> defMultiplier = new List<float>();
+    private List<float> speedMultiplier = new List<float>();
+    private List<float> cooldownMultiplier = new List<float>();
+
+
+    public void AddAttackMultiplier(float multiplier)
     {
-        
+        this.attackMultiplier.Add(multiplier);
+    }
+    public void AddDefMultiplier(float multiplier)
+    {
+        this.defMultiplier.Add(multiplier);
+    }
+    public void AddSpeedMultiplier(float multiplier)
+    {
+        this.speedMultiplier.Add(multiplier);
+    }
+    public void AddCooldownMultiplier(float multiplier)
+    {
+        this.cooldownMultiplier.Add(multiplier);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void RemoveAttackMultiplier(float multiplier)
     {
-        
+        this.attackMultiplier.Remove(multiplier);
     }
+    public void RemoveDefMultiplier(float multiplier)
+    {
+        this.defMultiplier.Remove(multiplier);
+    }
+    public void RemoveSpeedMultiplier(float multiplier)
+    {
+        this.speedMultiplier.Remove(multiplier);
+    }
+    public void RemoveCooldownMultiplier(float multiplier)
+    {
+        this.cooldownMultiplier.Remove(multiplier);
+    }
+
+    public float GetAttackMultiplier() {
+        float toatalMultiplier = 1f;
+        foreach (float multiplier in this.attackMultiplier) {
+            toatalMultiplier *= multiplier;
+        }
+        return toatalMultiplier;
+    }
+    public float GetDefMultiplier() {
+        float toatalMultiplier = 1f;
+        foreach (float multiplier in this.defMultiplier) {
+            toatalMultiplier *= multiplier;
+        }
+        return toatalMultiplier;
+    }
+    public float GetSpeedMultiplier() {
+        float toatalMultiplier = 1f;
+        foreach (float multiplier in this.speedMultiplier) {
+            toatalMultiplier *= multiplier;
+        }
+        return toatalMultiplier;
+    }
+    public float GetCooldownMultiplier() {
+        float toatalMultiplier = 1f;
+        foreach (float multiplier in this.cooldownMultiplier) {
+            toatalMultiplier *= multiplier;
+        }
+        return toatalMultiplier;
+    }
+
 }
