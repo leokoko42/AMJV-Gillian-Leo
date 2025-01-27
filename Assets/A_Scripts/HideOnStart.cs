@@ -25,4 +25,23 @@ public class HideOnStart : MonoBehaviour
             unhidden = true;
         }
     }
+
+    public void Hide()
+    {
+        if (unhidden)
+        {
+            transform.localScale = Vector3.zero;
+            unhidden = false;
+        }
+    }
+
+    public bool GetUnhidden()
+    {
+        return unhidden;
+    }
+
+    public void SetUnhidden(bool b)
+    {
+        unhidden = b;
+    }
 }

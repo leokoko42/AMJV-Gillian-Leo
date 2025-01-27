@@ -21,16 +21,19 @@ public class EntityBehavior : MonoBehaviour
     private LayerMask layerMaskWalls, layerMaskGround;
     public UnityEvent<float> attacked_enemy;
     private GameManager game_manager;
+    private UnitPlacement unit_placement;
     private Entity.Behavior entityBehavior;
     private List<GameObject> allies_list, oponents_list;
     private int currentNavMeshMask;
     private float entity_speed;
-
-    private GameObject crown;
-    private GameObject health_bar;
-    private GameObject mana_bar;
     public float total_damage_dealt,total_damage_taken,total_damage_absorbed,total_enemies_defeated;
     public float total_mana_charged,total_abilities_used,total_health_recovered;
+    [SerializeField] private GameObject crown;
+    [SerializeField] private GameObject health_bar;
+    [SerializeField] private GameObject mana_bar;
+    [SerializeField] private GameObject behavior_menu;
+    public UnityEvent show_menu;
+    public UnityEvent hide_menu;
 
     void Start()
     {
@@ -50,11 +53,13 @@ public class EntityBehavior : MonoBehaviour
         stunned = false;
 
         game_manager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        unit_placement = GameObject.Find("PlacementManager").GetComponent<UnitPlacement>();
 
-        crown = GameObject.Find("Crown");
+        //crown = GameObject.Find("Crown");
         crown.SetActive(false);
-        health_bar = GameObject.Find("HealthBar");
-        mana_bar = GameObject.Find("ManaBar");
+        //health_bar = GameObject.Find("HealthBar");
+        //mana_bar = GameObject.Find("ManaBar");
+        //behavior_menu = GameObject.Find("BehaviorMenu");
 
         total_damage_dealt = 0;
         total_damage_taken = 0;
@@ -300,6 +305,8 @@ public class EntityBehavior : MonoBehaviour
         health_bar.transform.position = new Vector3(hb_pos.x, hb_pos.y+25, hb_pos.z);
         Vector3 mb_pos = mana_bar.transform.position;
         mana_bar.transform.position = new Vector3(mb_pos.x, mb_pos.y + 25, mb_pos.z);
+        Vector3 bm_pos = behavior_menu.transform.position;
+        behavior_menu.transform.position = new Vector3(mb_pos.x, mb_pos.y + 25, mb_pos.z);
     }
 
     public void RemoveCrown()
@@ -309,6 +316,8 @@ public class EntityBehavior : MonoBehaviour
         health_bar.transform.position = new Vector3(hb_pos.x, hb_pos.y - 25, hb_pos.z);
         Vector3 mb_pos = mana_bar.transform.position;
         mana_bar.transform.position = new Vector3(mb_pos.x, mb_pos.y - 25, mb_pos.z);
+        Vector3 bm_pos = behavior_menu.transform.position;
+        behavior_menu.transform.position = new Vector3(mb_pos.x, mb_pos.y - 25, mb_pos.z);
     }
 
     public void ChangeDamageDealt(float dmg)
@@ -338,6 +347,41 @@ public class EntityBehavior : MonoBehaviour
     public void ChangeHealthRecovered(float heal)
     {
         total_health_recovered += heal;
+    }
+
+    public void ShowMenu()
+    {
+        show_menu.Invoke();
+    }
+
+    public void HideMenu()
+    {
+        hide_menu.Invoke();
+    }
+
+    public void OffenseBehavior()
+    {
+        allyEntity.SetBehavior(Entity.Behavior.Offense);
+    }
+
+    public void NeutralBehavior()
+    {
+        allyEntity.SetBehavior(Entity.Behavior.Neutral);
+    }
+
+    public void DefenseBehavior()
+    {
+        allyEntity.SetBehavior(Entity.Behavior.Defense);
+    }
+
+    public void SetKing()
+    {
+        game_manager.SetAllyKing(gameObject);
+    }
+
+    public void Sell()
+    {
+        unit_placement.SellEntity(gameObject);
     }
 
 }

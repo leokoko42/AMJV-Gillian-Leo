@@ -11788,6 +11788,10 @@ PrefabInstance:
       propertyPath: speed
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8764851698418899328, guid: f875f405e2ed43946bd31354eddb3a6e, type: 3}
+      propertyPath: behavior
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13549,7 +13553,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8861718952445635775, guid: 655f99d9c4da2034f8032c7acdf64ebe, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000015258789
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9098242232497310072, guid: 655f99d9c4da2034f8032c7acdf64ebe, type: 3}
       propertyPath: m_Name
