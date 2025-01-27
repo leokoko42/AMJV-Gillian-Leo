@@ -2538,6 +2538,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  left_eye: {fileID: 977850492363398145}
+  right_eye: {fileID: 7410027233068046493}
+  offense_mat: {fileID: 2100000, guid: 7e5054007b034c14dbf1f64032530cb0, type: 2}
+  neutral_mat: {fileID: 2100000, guid: d1b124a4181f1ba44b0f93c75ab1894e, type: 2}
+  defense_mat: {fileID: 2100000, guid: d07abe2f954ad7849bbcb8ea2ec6aaeb, type: 2}
 --- !u!114 &5417234732440709696
 MonoBehaviour:
   m_ObjectHideFlags: 0

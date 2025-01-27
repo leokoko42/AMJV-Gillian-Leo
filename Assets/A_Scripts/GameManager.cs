@@ -231,18 +231,16 @@ public class GameManager : MonoBehaviour
 
     private void PauseOrResume()
     {
-        Debug.Log("1");
         Time.timeScale = 1.0f - Time.timeScale;
         pauseText.SetActive(!pauseText.activeSelf);
     }
 
     private void SettingsMenu()
     {
-        Debug.Log("2");
     }
+
     void QuitGame()
     {
-        Debug.Log("3");
         Application.Quit();
     }
 }
