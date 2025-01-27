@@ -31,12 +31,12 @@ public class AbilityManager : MonoBehaviour
     }
 
     private bool WarriorAbility(GameObject attacker) {
-        StartCoroutine(WarriorBoost(attacker));
+        BasicEntity attackerEntity = attacker.GetComponent<BasicEntity>();
+        StartCoroutine(WarriorBoost(attackerEntity));
         return true;
     }
-    private IEnumerator WarriorBoost(GameObject attacker) {
-        BasicEntity attackerEntity = attacker.GetComponent<BasicEntity>();
-        MeshRenderer warriorRenderer = transform.Find("Textures/Entity/Cube").gameObject.GetComponent<MeshRenderer>();
+    private IEnumerator WarriorBoost(BasicEntity attackerEntity) {
+        MeshRenderer warriorRenderer = GetComponent<MeshRenderer>();
 
         float globalMultiplier = 1f + 0.3f * abilityMultiplier;
 
