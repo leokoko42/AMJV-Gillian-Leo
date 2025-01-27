@@ -1016,6 +1016,8 @@ GameObject:
   - component: {fileID: 6158131214705589896}
   - component: {fileID: 5417234732440709696}
   - component: {fileID: 5005470503055312848}
+  - component: {fileID: 8923120151016547523}
+  - component: {fileID: 1987572297502440785}
   - component: {fileID: -4729630872209467906}
   m_Layer: 7
   m_Name: Ally
@@ -1105,7 +1107,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9519e2ed93ae1844585cd7d4422c64df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ability: 0
   entityBullet: {fileID: 0}
+  allyEntity: {fileID: 8923120151016547523}
+  allyRigidBody: {fileID: -4729630872209467906}
+  allyAbility: {fileID: 1987572297502440785}
+  allyNavMeshAgent: {fileID: 505205278999401064}
+  stunned: 0
+  isOnCooldown: 0
+  touchingGround: 0
   attacked_enemy:
     m_PersistentCalls:
       m_Calls:
@@ -1290,6 +1300,48 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8923120151016547523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8590077054684633361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84d6cfe30aa85f7499593736cb5c8897, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isActive: 0
+  isEnemy: 0
+  isKing: 0
+  behavior: 0
+  hp: 0
+  maxHP: 0
+  def: 0
+  speed: 0
+  attackSpeed: 0
+  attack: 0
+  mana: 0
+  maxMana: 0
+  cost: 0
+  range: 0
+  manaRegen: 0
+--- !u!114 &1987572297502440785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8590077054684633361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a68d3123513b9b41ba5869200ca6b8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalWarriorMaterial: {fileID: 2100000, guid: ee1ede9fd1d539e4e98b93a13898697c, type: 2}
+  rageWarriorMaterial: {fileID: 2100000, guid: 5915e041f42f045438be5124f4024e79, type: 2}
+  abilityMultiplier: 1
 --- !u!54 &-4729630872209467906
 Rigidbody:
   m_ObjectHideFlags: 0

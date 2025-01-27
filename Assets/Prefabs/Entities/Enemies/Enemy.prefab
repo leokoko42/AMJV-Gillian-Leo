@@ -678,6 +678,7 @@ GameObject:
   - component: {fileID: 5507245550275981327}
   - component: {fileID: 2885097056745959022}
   - component: {fileID: 6574236700469539684}
+  - component: {fileID: 6017701709652598059}
   - component: {fileID: 6176574352406469431}
   m_Layer: 7
   m_Name: Enemy
@@ -898,7 +899,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9519e2ed93ae1844585cd7d4422c64df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ability: 0
   entityBullet: {fileID: 0}
+  allyEntity: {fileID: 8764851698418899328}
+  allyRigidBody: {fileID: 6176574352406469431}
+  allyAbility: {fileID: 6017701709652598059}
+  allyNavMeshAgent: {fileID: 505205278999401064}
   attacked_enemy:
     m_PersistentCalls:
       m_Calls: []
@@ -951,6 +957,18 @@ MonoBehaviour:
   mana_gain:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6017701709652598059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8590077054684633361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a68d3123513b9b41ba5869200ca6b8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!54 &6176574352406469431
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -42,7 +42,7 @@ public class HealthManager : MonoBehaviour
 
     public float Damage(float damageAmount) {
         float entityHp = entity.GetHP();
-        float absorbed = Mathf.Min(damageAmount, entity.GetDef());
+        float absorbed = Mathf.Min(damageAmount, entity.GetDef()*entity.GetDefMultiplier());
         damageAmount -= absorbed;
         float newHp = entityHp - damageAmount;
         if (newHp <= 0) {

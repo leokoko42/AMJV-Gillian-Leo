@@ -10,12 +10,15 @@ using UnityEngine.Rendering;
 
 public class EntityBehavior : MonoBehaviour
 {
+    public enum Ability {Warrior, Archer, Tank, Healer, Monk, Summoner, Shaman,Hammer}
+    [SerializeField] private Ability ability;
     [SerializeField] private GameObject entityBullet;
-    private BasicEntity allyEntity;
-    private Rigidbody allyRigidBody;
-    private bool stunned, isOnCooldown, touchingGround;
+    [SerializeField] private BasicEntity allyEntity;
+    [SerializeField] private Rigidbody allyRigidBody;
+    [SerializeField] private AbilityManager allyAbility;
+    [SerializeField] private NavMeshAgent allyNavMeshAgent;
+    public bool stunned, isOnCooldown, touchingGround;
     private LayerMask layerMaskWalls, layerMaskGround;
-    private NavMeshAgent allyNavMeshAgent;
     public UnityEvent<float> attacked_enemy;
     private GameManager game_manager;
     private Entity.Behavior entityBehavior;
@@ -26,21 +29,12 @@ public class EntityBehavior : MonoBehaviour
     private GameObject crown;
     private GameObject health_bar;
     private GameObject mana_bar;
-
-    public float total_damage_dealt;
-    public float total_damage_taken;
-    public float total_damage_absorbed;
-    public float total_enemies_defeated;
-    public float total_mana_charged;
-    public float total_abilities_used;
-    public float total_health_recovered;
+    public float total_damage_dealt,total_damage_taken,total_damage_absorbed,total_enemies_defeated;
+    public float total_mana_charged,total_abilities_used,total_health_recovered;
 
     void Start()
     {
-        allyEntity = GetComponent<BasicEntity>();
         entityBehavior = allyEntity.GetBehavior();
-
-        allyRigidBody = GetComponent<Rigidbody>();
 
         // A mettre en public dans le game Manager ?
         layerMaskWalls = LayerMask.GetMask("Walls");
@@ -50,8 +44,6 @@ public class EntityBehavior : MonoBehaviour
         isOnCooldown = false;
 
         entity_speed = allyEntity.GetSpeed();
-
-        allyNavMeshAgent = GetComponent<NavMeshAgent>();
         allyNavMeshAgent.stoppingDistance = allyEntity.GetRange();
 
         touchingGround = true;
@@ -74,10 +66,6 @@ public class EntityBehavior : MonoBehaviour
 
         UpdateGroundAreaType();
         RefreshEntitiesLists();
-    }
-
-    void Update() {
-
     }
     
     public void RefreshEntitiesLists() {
@@ -110,11 +98,11 @@ public class EntityBehavior : MonoBehaviour
             currentNavMeshMask = hit.mask;
             if (hit.mask == 1) //On grass ground
             {
-                allyNavMeshAgent.speed = entity_speed;
+                allyNavMeshAgent.speed = entity_speed * allyEntity.GetSpeedMultiplier();
             }
             else if (hit.mask == 8) //On sand ground
             {
-                allyNavMeshAgent.speed = entity_speed * 0.5f;
+                allyNavMeshAgent.speed = entity_speed * allyEntity.GetSpeedMultiplier() * 0.5f;
             }
         }
     }
@@ -218,20 +206,26 @@ public class EntityBehavior : MonoBehaviour
         }
         else
         {
-            allyNavMeshAgent.enabled = true;
-            UpdateGroundAreaType();
             GameObject targetOponent;
             float distance;
 
             (targetOponent,distance) = getTargetEntity();
             float range = allyEntity.GetRange();
-            if (distance <= range && !isEntityObstructed(targetOponent, distance)) {
-                if (!isOnCooldown) {
-                    MoveToGameObject(gameObject); //Maybe use a better alternative to stop the movement ?
-                    AttackOther(targetOponent, range);
+
+            bool targetInRange = (distance <= range && !isEntityObstructed(targetOponent, distance));
+            bool abilityAvailable = (allyEntity.GetMana() == allyEntity.GetMaxMana());
+
+            if (!isOnCooldown && allyAbility.ActivateAbility(abilityAvailable, ability, gameObject, targetOponent, targetInRange)) {
+                    allyEntity.SetMana(0);
                 }
+            else if (!isOnCooldown && targetInRange) {
+                allyNavMeshAgent.enabled = false;
+                //MoveToGameObject(gameObject); //Maybe use a better alternative to stop the movement ?
+                AttackOther(targetOponent, range);
             }
             else {
+                allyNavMeshAgent.enabled = true;
+                UpdateGroundAreaType();
                 MoveToGameObject(targetOponent);
             }
         }
@@ -244,8 +238,8 @@ public class EntityBehavior : MonoBehaviour
     }
 
     private void AttackOther(GameObject oponent, float range) {
-        float attack = allyEntity.GetAttack();
-        float attackSpeed = allyEntity.GetAttackSpeed();
+        float attack = allyEntity.GetAttack() * allyEntity.GetAttackMultiplier();
+        float attackSpeed = allyEntity.GetAttackSpeed() * allyEntity.GetCooldownMultiplier();
 
         if (range>5) { //Add a bool variable to ensure if an entity is ranged or not ?
             RangedAttack(oponent, attack);
@@ -268,11 +262,6 @@ public class EntityBehavior : MonoBehaviour
         float dmg_dealt = oponentHealth.Damage(attack);
         ChangeDamageDealt(dmg_dealt);
         attacked_enemy.Invoke(dmg_dealt);
-    }
-
-    private void UseUltimate() {
-        ChangeAbilitiesUsed();
-        throw new NotImplementedException();
     }
 
     //Differents corroutines
