@@ -12,6 +12,11 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private GameObject shop;
     [SerializeField] private GameObject button_prefab;
     [SerializeField] private Transform parent_panel;
+    [SerializeField] private Button heal_gloves;
+    [SerializeField] private Button power_ring;
+    [SerializeField] private Button poison_vial;
+    [SerializeField] private Button revenge_amulet;
+    [SerializeField] private Button resurrection_earring;
 
     public UnityEvent<GameObject> change_spawn;
     private GameObject[] ally_prefabs;
@@ -104,4 +109,45 @@ public class ShopManager : MonoBehaviour
     }
 
     public GameObject GetSelectedEntity() { return selected_entity; }
+
+    private void EquipItem(string item)
+    {
+        if (selected_entity != null)
+        {
+            EntityBehavior eb = selected_entity.GetComponent<EntityBehavior>();
+            string prev_item = eb.GetItemEquipped();
+            SetButtonState(prev_item, true);
+            eb.SetItemEquipped(item);
+            SetButtonState(item, false);
+        }
+    }
+
+    private void SetButtonState(string item, bool state)
+    {
+        switch (item)
+        {
+            case "HealGloves":
+                heal_gloves.interactable = state;
+                heal_gloves.transform.GetChild(1).gameObject.SetActive(state);
+                break;
+            case "PowerRing":
+                power_ring.interactable = state;
+                power_ring.transform.GetChild(1).gameObject.SetActive(state);
+                break;
+            case "PoisonVial":
+                poison_vial.interactable = state;
+                poison_vial.transform.GetChild(1).gameObject.SetActive(state);
+                break;
+            case "RevengeAmulet":
+                revenge_amulet.interactable = state;
+                revenge_amulet.transform.GetChild(1).gameObject.SetActive(state);
+                break;
+            case "ResurrectionEarring":
+                resurrection_earring.interactable = state;
+                resurrection_earring.transform.GetChild(1).gameObject.SetActive(state);
+                break;
+            default:
+                break;
+        }
+    }
 }

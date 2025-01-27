@@ -31,6 +31,8 @@ public class EntityBehavior : MonoBehaviour
     public UnityEvent show_menu;
     public UnityEvent hide_menu;
 
+    private string item_equipped;
+
     public float total_damage_dealt;
     public float total_damage_taken;
     public float total_damage_absorbed;
@@ -69,6 +71,8 @@ public class EntityBehavior : MonoBehaviour
         //health_bar = GameObject.Find("HealthBar");
         //mana_bar = GameObject.Find("ManaBar");
         //behavior_menu = GameObject.Find("BehaviorMenu");
+
+        item_equipped = "";
 
         total_damage_dealt = 0;
         total_damage_taken = 0;
@@ -395,5 +399,12 @@ public class EntityBehavior : MonoBehaviour
     {
         unit_placement.SellEntity(gameObject);
     }
+
+    public void SetItemEquipped(string item) 
+    { 
+        item_equipped = item;
+    }
+
+    public string GetItemEquipped() {  return item_equipped; }
 
 }
