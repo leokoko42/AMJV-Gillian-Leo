@@ -474,6 +474,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1987572297502440785, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
+      propertyPath: rageWarriorMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 5915e041f42f045438be5124f4024e79, type: 2}
+    - target: {fileID: 1987572297502440785, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
+      propertyPath: normalWarriorMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: ee1ede9fd1d539e4e98b93a13898697c, type: 2}
     - target: {fileID: 7392523925521523090, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -7,10 +7,11 @@ public class AbilityManager : MonoBehaviour
 {
     [SerializeField] private Material normalWarriorMaterial, rageWarriorMaterial;
     [SerializeField] private GameObject archerAbilityBullet;
+    [SerializeField] private GameObject summonPrefab;
     private EntityBehavior attackEntityBehavior;
     private BasicEntity attackerEntity;
     private LayerMask entityLayerMask;
-    private List<GameObject> summonnedEntitiesList;
+    public List<GameObject> summonnedEntitiesList;
     public float abilityMultiplier = 1f;
     private void Start() {
         entityLayerMask = LayerMask.GetMask("Entity");
@@ -97,16 +98,27 @@ public class AbilityManager : MonoBehaviour
         return true;
     }
 
+    private int nbSummons = 0;
     public bool SummonerAbility(GameObject attacker) {
+        if (nbSummons == 3) {
+            return false;
+        }
+        for (int i=nbSummons; i<3; i++) {
+            GameObject summonned = Instantiate(summonPrefab, transform.position, new Quaternion());
+            AddSummonnedInstance(summonned);
+            summonned.GetComponent<Summoned>().Init(this);
+        }
         return true;
     }
 
     public void AddSummonnedInstance(GameObject summonned) {
         summonnedEntitiesList.Add(summonned);
+        nbSummons++;
     }
 
     public void RemoveSummonnedInstance(GameObject summonned) {
         summonnedEntitiesList.Remove(summonned);
+        nbSummons--;
     }
     
     public bool MonkAbility(GameObject attacker) {

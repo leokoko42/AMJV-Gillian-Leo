@@ -474,6 +474,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1987572297502440785, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
+      propertyPath: summonPrefab
+      value: 
+      objectReference: {fileID: 2114115336765003887, guid: 31d3637e2433eac44bb1d94ebd7657f0, type: 3}
     - target: {fileID: 6158131214705589896, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
       propertyPath: ability
       value: 5
