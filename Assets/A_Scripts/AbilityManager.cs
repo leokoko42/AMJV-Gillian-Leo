@@ -77,9 +77,9 @@ public class AbilityManager : MonoBehaviour
         return true;
     }
     private IEnumerator TankBoost(BasicEntity targetedEntity) {
-        targetedEntity.SetDef(targetedEntity.GetDef() + 5 * abilityMultiplier);
+        targetedEntity.SetDef(targetedEntity.GetTrueDef() + 5 * abilityMultiplier);
         yield return new WaitForSeconds(6);
-        targetedEntity.SetDef(targetedEntity.GetDef() - 5 * abilityMultiplier);
+        targetedEntity.SetDef(targetedEntity.GetTrueDef() - 5 * abilityMultiplier);
     }
 
     public bool HealerAbility(GameObject attacker) {

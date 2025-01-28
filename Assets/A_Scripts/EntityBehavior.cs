@@ -315,7 +315,7 @@ public class EntityBehavior : MonoBehaviour
     private void Update() {
         if (Input.GetKeyDown("space")) {
             Debug.Log("FIRE");
-            ApplyIce(10);
+            ApplyPoison(10);
         }
     }
     public void ApplyFire(float time) {
@@ -351,11 +351,12 @@ public class EntityBehavior : MonoBehaviour
     }
     private IEnumerator PoisonForSeconds(float amount) {
         nbPoison++;
-        allyEntity.AddDefMultiplier(1-amount/100);
+        float totalDebuff = Mathf.Pow(0.95f, amount);
+        allyEntity.AddDefMultiplier(totalDebuff);
         poisonParticles.Play();
-        yield return new WaitForSeconds(amount);
+        yield return new WaitForSeconds(10);
         nbPoison--;
-        allyEntity.RemoveDefMultiplier(1-amount/100);
+        allyEntity.RemoveDefMultiplier(totalDebuff);
         if (nbPoison == 0) {
             poisonParticles.Stop();
         }
