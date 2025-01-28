@@ -36,6 +36,7 @@ public class HealthManager : MonoBehaviour
         float entityHp = entity.GetHP();
         float entityMaxHp = entity.GetMaxHP();
         float newHp = Mathf.Min(entityMaxHp, entityHp + healAmount);
+        entity.SetHP(newHp);
         health_change.Invoke(newHp, entityMaxHp);
         healed.Invoke(newHp-entityHp);
     }
@@ -58,14 +59,6 @@ public class HealthManager : MonoBehaviour
     }
 
     public void Death() {
-        /* Test de KnockBack
-        Vector3 delta = new Vector3(0,1,0);
-        Collider[] colliders = Physics.OverlapCapsule(transform.position - delta, transform.position + delta, 5f, layerMask);
-        foreach (Collider collider in colliders) {
-            collider.GetComponent<EntityBehavior>().ApplyKnockback(transform.position, 3);
-        }
-        */
-
         if (GetComponent<BasicEntity>().GetIsEnemy()) {
             gameManager.RemoveEnemy(gameObject);
         }

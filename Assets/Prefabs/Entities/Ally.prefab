@@ -86,7 +86,6 @@ GameObject:
   - component: {fileID: 4052360691144011716}
   - component: {fileID: 1460344414751214559}
   - component: {fileID: 6169846090341592108}
-  - component: {fileID: 4623408071010625740}
   m_Layer: 7
   m_Name: LeftEye
   m_TagString: Untagged
@@ -162,29 +161,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &4623408071010625740
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 977850492363398145}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2000880743821983065
 GameObject:
   m_ObjectHideFlags: 0
@@ -1779,7 +1755,6 @@ GameObject:
   - component: {fileID: 3712101892282989852}
   - component: {fileID: 2931830474333677808}
   - component: {fileID: 9155009298847932243}
-  - component: {fileID: 7124747423985844684}
   m_Layer: 7
   m_Name: RightEye
   m_TagString: Untagged
@@ -1855,29 +1830,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &7124747423985844684
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7410027233068046493}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7774196370087479838
 GameObject:
   m_ObjectHideFlags: 0
@@ -2729,6 +2681,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalWarriorMaterial: {fileID: 2100000, guid: ee1ede9fd1d539e4e98b93a13898697c, type: 2}
   rageWarriorMaterial: {fileID: 2100000, guid: 5915e041f42f045438be5124f4024e79, type: 2}
+  archerAbilityBullet: {fileID: 9135044066171264931, guid: 41113badc51de8d449aa827c9d3cfe0f, type: 3}
   abilityMultiplier: 1
 --- !u!54 &-4729630872209467906
 Rigidbody:
