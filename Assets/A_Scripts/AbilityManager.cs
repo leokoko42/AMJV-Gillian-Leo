@@ -150,6 +150,27 @@ public class AbilityManager : MonoBehaviour
         if (!isEnemyInRange) {
             return false;
         }
+        Vector3 delta = new Vector3(0, 1, 0);
+        Collider[] colliders = Physics.OverlapCapsule(attacker.transform.position - delta, attacker.transform.position + delta, 6f, entityLayerMask);
+        foreach (Collider collider in colliders) {
+            if (attacker.tag != collider.gameObject.tag) {
+                EntityBehavior targetBehavior = collider.GetComponent<EntityBehavior>();
+                int randomStatus = UnityEngine.Random.Range(0,3);
+                switch (randomStatus) {
+                    case 0:
+                        targetBehavior.ApplyFire(8 * abilityMultiplier);
+                        break;
+                    case 1:
+                        targetBehavior.ApplyPoison(8 * abilityMultiplier);
+                        break;
+                    case 2:
+                        targetBehavior.ApplyIce(8 * abilityMultiplier);
+                        break;
+                    default:
+                        throw new Exception("Wrong Status effect from Shaman");
+                }
+            }
+        }
         return true;
     }
 }

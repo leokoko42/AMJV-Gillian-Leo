@@ -118,7 +118,7 @@ Transform:
   - {fileID: 3196881688680549856}
   - {fileID: 6203368736013199189}
   - {fileID: 7737297980505610769}
-  m_Father: {fileID: 7487964953626649194}
+  m_Father: {fileID: 1002836114522220006}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7463951737169564878
 GameObject:
@@ -390,7 +390,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8923120151016547523, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
       propertyPath: manaRegen
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8923120151016547523, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
       propertyPath: attackSpeed
@@ -399,13 +399,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 907430270829028894, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 7392523925521523090, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3221744313585845318}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
---- !u!4 &7487964953626649194 stripped
+--- !u!4 &1002836114522220006 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 907430270829028894, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7392523925521523090, guid: 9581658e037bd4c439c8cfc6e844af7a, type: 3}
   m_PrefabInstance: {fileID: 7745434301437494388}
   m_PrefabAsset: {fileID: 0}
