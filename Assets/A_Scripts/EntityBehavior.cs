@@ -9,7 +9,6 @@ using UnityEngine.Analytics;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
-using static UnityEditor.Progress;
 using static UnityEngine.EventSystems.EventTrigger;
 
 public class EntityBehavior : MonoBehaviour
@@ -17,7 +16,7 @@ public class EntityBehavior : MonoBehaviour
     public enum Ability {Warrior, Archer, Tank, Healer, Monk, Summoner, Shaman,Hammer}
     [SerializeField] private Ability ability;
     [SerializeField] private GameObject entityBullet;
-    [SerializeField] private BasicEntity allyEntity;
+    [SerializeField] private BasicEntity basicEntity;
     [SerializeField] private Rigidbody allyRigidBody;
     [SerializeField] private AbilityManager allyAbility;
     [SerializeField] private NavMeshAgent allyNavMeshAgent;
@@ -52,27 +51,35 @@ public class EntityBehavior : MonoBehaviour
     private int allies_on_start;
     private float revenge_mult;
     [SerializeField] ParticleSystem fireParticles, iceParticles, poisonParticles;
-    private float initialDef;
 
     void Start()
     {
-        entityBehavior = allyEntity.GetBehavior();
+        entityBehavior = basicEntity.GetBehavior();
 
         // A mettre en public dans le game Manager ?
         layerMaskWalls = LayerMask.GetMask("Walls");
         layerMaskGround = LayerMask.GetMask("Ground");
         // ----
-
+        game_manager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        if (!game_manager.GetGameActive()) {
+            unit_placement = GameObject.Find("PlacementManager").GetComponent<UnitPlacement>();
+        }
         isOnCooldown = false;
 
-        allyNavMeshAgent.stoppingDistance = allyEntity.GetRange();
+        allyNavMeshAgent.stoppingDistance = basicEntity.GetRange();
 
         touchingGround = true;
         stunned = false;
-        crown.SetActive(false);
-        
-        game_manager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        unit_placement = GameObject.Find("PlacementManager").GetComponent<UnitPlacement>();
+        if (basicEntity.GetIsKing()) {
+            crown.SetActive(true);
+            if (basicEntity.GetIsEnemy()) {
+                game_manager.SetEnemyKing(gameObject);
+                Debug.Log("Set Enemy King");
+            }
+        }
+        else {
+            crown.SetActive(false);
+        }
 
         //crown = GameObject.Find("Crown");
         //health_bar = GameObject.Find("HealthBar");
@@ -94,14 +101,13 @@ public class EntityBehavior : MonoBehaviour
         RefreshEntitiesLists();
 
         revenge_mult = 1f;
-        initialDef = allyEntity.GetDef();
         fireParticles.Stop();
         iceParticles.Stop();
         poisonParticles.Stop();
     }
     
     public void RefreshEntitiesLists() {
-        if (allyEntity.GetIsEnemy()) {
+        if (basicEntity.GetIsEnemy()) {
             allies_list = game_manager.enemy_list;
             oponents_list = game_manager.ally_list;
         }
@@ -128,7 +134,7 @@ public class EntityBehavior : MonoBehaviour
         allyNavMeshAgent.SamplePathPosition(NavMesh.AllAreas, 0, out hit);
         if (hit.mask != currentNavMeshMask) {
             currentNavMeshMask = hit.mask;
-            entity_speed = allyEntity.GetSpeed();
+            entity_speed = basicEntity.GetSpeed();
             if (hit.mask == 1) //On grass ground
             {
                 allyNavMeshAgent.speed = entity_speed;
@@ -216,20 +222,22 @@ public class EntityBehavior : MonoBehaviour
 
     // A déplacer dans GameManager
     private (GameObject,float) getKingOf(List<GameObject> entities) {
-        foreach (GameObject entity in entities) {
-            BasicEntity oponentEntity = entity.GetComponent<BasicEntity>();
-            if (oponentEntity.GetIsKing()) {
-                float distance = Vector3.Distance(entity.transform.position,transform.position);
-                return (entity, distance);
-            }
+        GameObject enemyKing;
+        if (basicEntity.GetIsEnemy()) {
+            enemyKing = game_manager.ally_king;
         }
-        throw new Exception("No oponent king");
+        else {
+            enemyKing = game_manager.enemy_king;
+        }
+            
+        float distance = Vector3.Distance(enemyKing.transform.position,transform.position);
+        return (enemyKing, distance);
     }
 
     //Methods designed to dictate the actions of the Entity
     public void UpdateEntityMovement() {
         UpdateIsOnGround();
-        if (stunned || !allyEntity.GetIsActive()) //Enable the rigidbody & physics
+        if (stunned || !basicEntity.GetIsActive()) //Enable the rigidbody & physics
         {
             if (allyNavMeshAgent.enabled) {
                 allyNavMeshAgent.enabled = false;
@@ -243,15 +251,15 @@ public class EntityBehavior : MonoBehaviour
             float distance;
 
             (targetOponent,distance) = getTargetEntity();
-            float range = allyEntity.GetRange();
+            float range = basicEntity.GetRange();
 
             bool targetInRange = (distance <= range && !isEntityObstructed(targetOponent, distance));
-            bool abilityAvailable = (allyEntity.GetMana() == allyEntity.GetMaxMana());
+            bool abilityAvailable = (basicEntity.GetMana() == basicEntity.GetMaxMana());
 
             if (!isOnCooldown && allyAbility.ActivateAbility(abilityAvailable, ability, gameObject, targetOponent, targetInRange)) {
                 if (item_equipped == "HealHalo") 
-                    gameObject.GetComponent<HealthManager>().Heal(allyEntity.GetMaxHP() * DataHolder.GetHaloHealPercentage());
-                allyEntity.SetMana(0);
+                    gameObject.GetComponent<HealthManager>().Heal(basicEntity.GetMaxHP() * DataHolder.GetHaloHealPercentage());
+                basicEntity.SetMana(0);
                 StartCoroutine(AttackCooldown());
             }
             else if (!isOnCooldown && targetInRange) {
@@ -273,7 +281,7 @@ public class EntityBehavior : MonoBehaviour
     }
 
     private void AttackOther(GameObject oponent, float range) {
-        float attack = allyEntity.GetAttack();
+        float attack = basicEntity.GetAttack();
 
         if (range>5) { //Add a bool variable to ensure if an entity is ranged or not ?
             RangedAttack(oponent, attack);
@@ -306,7 +314,7 @@ public class EntityBehavior : MonoBehaviour
     //Differents corroutines
     public IEnumerator AttackCooldown()
     {
-        float attackSpeed = allyEntity.GetAttackSpeed();
+        float attackSpeed = basicEntity.GetAttackSpeed();
         isOnCooldown = true;
         yield return new WaitForSeconds(attackSpeed);
         isOnCooldown = false;
@@ -355,7 +363,7 @@ public class EntityBehavior : MonoBehaviour
     private IEnumerator FireDamage() {
         HealthManager allyHealth = GetComponent<HealthManager>();
         while(isOnFire) {
-            allyHealth.TrueDamage(allyEntity.GetMaxHP()/100);
+            allyHealth.TrueDamage(basicEntity.GetMaxHP()/100);
             yield return new WaitForSeconds(1);
         }
     }
@@ -368,11 +376,11 @@ public class EntityBehavior : MonoBehaviour
     private IEnumerator PoisonForSeconds(float amount) {
         nbPoison++;
         float totalDebuff = Mathf.Pow(0.95f, amount);
-        allyEntity.AddDefMultiplier(totalDebuff);
+        basicEntity.AddDefMultiplier(totalDebuff);
         poisonParticles.Play();
         yield return new WaitForSeconds(10);
         nbPoison--;
-        allyEntity.RemoveDefMultiplier(totalDebuff);
+        basicEntity.RemoveDefMultiplier(totalDebuff);
         if (nbPoison == 0) {
             poisonParticles.Stop();
         }
@@ -384,11 +392,11 @@ public class EntityBehavior : MonoBehaviour
     }
     private IEnumerator IceForSeconds(float time) {
         nbIce++;
-        allyEntity.AddCooldownMultiplier(1.1f);
+        basicEntity.AddCooldownMultiplier(1.1f);
         iceParticles.Play();
         yield return new WaitForSeconds(time);
         nbIce--;
-        allyEntity.RemoveCooldownMultiplier(1.1f);
+        basicEntity.RemoveCooldownMultiplier(1.1f);
         if (nbIce == 0) {
             iceParticles.Stop();
         }
@@ -457,21 +465,21 @@ public class EntityBehavior : MonoBehaviour
 
     public void OffenseBehavior()
     {
-        allyEntity.SetBehavior(Entity.Behavior.Offense);
+        basicEntity.SetBehavior(Entity.Behavior.Offense);
         left_eye.GetComponent<MeshRenderer>().material = offense_mat;
         right_eye.GetComponent<MeshRenderer>().material = offense_mat;
     }
 
     public void NeutralBehavior()
     {
-        allyEntity.SetBehavior(Entity.Behavior.Neutral);
+        basicEntity.SetBehavior(Entity.Behavior.Neutral);
         left_eye.GetComponent<MeshRenderer>().material = neutral_mat;
         right_eye.GetComponent<MeshRenderer>().material = neutral_mat;
     }
 
     public void DefenseBehavior()
     {
-        allyEntity.SetBehavior(Entity.Behavior.Defense);
+        basicEntity.SetBehavior(Entity.Behavior.Defense);
         left_eye.GetComponent<MeshRenderer>().material = defense_mat;
         right_eye.GetComponent<MeshRenderer>().material = defense_mat;
     }
@@ -553,12 +561,12 @@ public class EntityBehavior : MonoBehaviour
         if (item_equipped == "RevengeMask")
         {
             Debug.Log("correct item");
-            allyEntity.RemoveAttackMultiplier(revenge_mult);
-            allyEntity.RemoveDefMultiplier(revenge_mult);
+            basicEntity.RemoveAttackMultiplier(revenge_mult);
+            basicEntity.RemoveDefMultiplier(revenge_mult);
             allyAbility.abilityMultiplier /= (revenge_mult / 2f + 0.5f);
             revenge_mult = 1f + DataHolder.GetMaskRevengeBoost() * Mathf.Max(allies_on_start - game_manager.ally_list.Count, 0);
-            allyEntity.AddAttackMultiplier(revenge_mult);
-            allyEntity.AddDefMultiplier(revenge_mult);
+            basicEntity.AddAttackMultiplier(revenge_mult);
+            basicEntity.AddDefMultiplier(revenge_mult);
             allyAbility.abilityMultiplier *= (revenge_mult / 2f + 0.5f);
 
             Debug.Log("URM no crash :)");

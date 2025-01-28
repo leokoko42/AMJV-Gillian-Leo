@@ -16982,7 +16982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ability: 0
   entityBullet: {fileID: 0}
-  allyEntity: {fileID: 8923120151016547523}
+  basicEntity: {fileID: 8923120151016547523}
   allyRigidBody: {fileID: -4729630872209467906}
   allyAbility: {fileID: 1987572297502440785}
   allyNavMeshAgent: {fileID: 505205278999401064}

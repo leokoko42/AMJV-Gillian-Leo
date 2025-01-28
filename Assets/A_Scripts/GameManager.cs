@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
     public List<GameObject> ally_list;
     public Dictionary<string, int> entity_max_occurences;
     public GameObject ally_king;
+    public GameObject enemy_king;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -93,9 +94,13 @@ public class GameManager : MonoBehaviour
             }
         }
         if (stats_panel.activeSelf) { UpdateStats(); }
-        if (enemy_list.Count == 0)
-        {
-            Victory();
+        if (game_active) {
+            if (!enemy_king) {
+                Victory();
+            }
+            if (!ally_king) {
+                Defeat();
+            }
         }
     }
 
@@ -177,6 +182,10 @@ public class GameManager : MonoBehaviour
         k.GetComponent<EntityBehavior>().AddCrown();
     }
 
+    public void SetEnemyKing(GameObject k) {
+        enemy_king = k;
+    }
+
     public GameObject[] FindPrefabs(string folderPath)
     {
         // Old Code : Works only in Editor
@@ -245,6 +254,13 @@ public class GameManager : MonoBehaviour
         gameUI.SetActive(false);
         DataHolder.SetCoins(DataHolder.GetCoins() + DataHolder.GetCoinsPerRound());
         Time.timeScale = 0f;
+    }
+
+    private void Defeat() 
+    {
+        SetGameActive(false);
+        //defeatScreen.SetActive(true);
+        gameUI.SetActive(false);
     }
 
     private void PauseOrResume()

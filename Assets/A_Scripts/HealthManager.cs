@@ -21,12 +21,6 @@ public class HealthManager : MonoBehaviour
         layerMask = LayerMask.GetMask("Entity");
     }
 
-    // Update is called once per frame
-    private bool hPressed;
-    void Update() {
-
-    }
-
     void FixedUpdate() {
         if (transform.position.y < -50) {
             Death();
@@ -91,13 +85,20 @@ public class HealthManager : MonoBehaviour
         else
         {
             death.Invoke();
-            if (GetComponent<BasicEntity>().GetIsEnemy())
+            BasicEntity basicEntity = GetComponent<BasicEntity>();
+            if (basicEntity.GetIsEnemy())
             {
                 gameManager.RemoveEnemy(gameObject);
+                if (basicEntity.GetIsKing()) {
+                    gameManager.SetEnemyKing(null);
+                }
             }
             else
             {
                 gameManager.RemoveAlly(gameObject);
+                if (basicEntity.GetIsKing()) {
+                    gameManager.SetAllyKing(null);
+                }
             }
             Destroy(gameObject);
         }
