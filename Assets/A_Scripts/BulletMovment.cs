@@ -11,8 +11,10 @@ public class BulletMovment : MonoBehaviour
     private Rigidbody bulletRigidbody;
     private bool lauch, autoAim;
     [SerializeField] private float theta = 20f;
+
+    [SerializeField] private bool isPoisoned = false;
     
-    public void Init(float new_attack,GameObject new_summoner) {
+    public void Init(float new_attack, GameObject new_summoner) {
         summoner = new_summoner;
         attack = new_attack;
     }
@@ -85,20 +87,25 @@ public class BulletMovment : MonoBehaviour
         string colliderTag = collider.gameObject.tag;
         if (isAimed) {
             if (collider.gameObject == target) {
-                HealthManager targetHealth = target.GetComponent<HealthManager>();
-                targetHealth.Damage(attack);
-                Destroy(gameObject);
+                ApplyDamage(collider);
             }
         }
         else {
             if (summoner.tag != colliderTag && (colliderTag == "Allies" || colliderTag == "Enemies")) {
-                HealthManager targetHealth = collider.GetComponent<HealthManager>();
-                targetHealth.Damage(attack);
-                Destroy(gameObject);
+                ApplyDamage(collider);
             }
         }
         if (colliderTag == "Obstacle" || colliderTag == "Ground") {
             Destroy(gameObject);
         }
+    }
+
+    public void ApplyDamage(Collider collider) {
+        HealthManager targetHealth = collider.GetComponent<HealthManager>();
+        targetHealth.Damage(attack);
+        if (isPoisoned) {
+            collider.GetComponent<EntityBehavior>().ApplyPoison(attack);
+        }
+        Destroy(gameObject);
     }
 }
