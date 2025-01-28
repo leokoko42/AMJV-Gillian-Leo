@@ -287,13 +287,18 @@ public class EntityBehavior : MonoBehaviour
     private void RangedAttack(GameObject oponent, float attack) {
         GameObject bullet = Instantiate(entityBullet, transform.position + Vector3.forward*0.5f, transform.rotation);
         BulletMovment bulletMovment = bullet.GetComponent<BulletMovment>(); 
-        bulletMovment.Init(attack, oponent, gameObject);
+        bulletMovment.Init(attack, oponent, gameObject, item_equipped == "PoisonVial" ? attack * DataHolder.vial_poison_precentage : 0);
     }
 
     private void MeleeAttack(GameObject oponent, float attack) {
         HealthManager oponentHealth = oponent.GetComponent<HealthManager>();
 
         float dmg_dealt = oponentHealth.Damage(attack);
+        if (item_equipped == "PoisonVial")
+        {
+            EntityBehavior eb = oponent.GetComponent<EntityBehavior>();
+            eb.ApplyPoison(attack * DataHolder.vial_poison_precentage);
+        }
         ChangeDamageDealt(dmg_dealt);
         attacked_enemy.Invoke(dmg_dealt);
     }

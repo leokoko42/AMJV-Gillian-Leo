@@ -160,7 +160,7 @@ public class BasicEntity : Entity
 
 
     private List<float> attackMultiplier = new List<float>();
-    private List<float> defMultiplier = new List<float>();
+    public List<float> defMultiplier = new List<float>();
     private List<float> speedMultiplier = new List<float>();
     private List<float> cooldownMultiplier = new List<float>();
 
@@ -188,7 +188,8 @@ public class BasicEntity : Entity
     }
     public void RemoveDefMultiplier(float multiplier)
     {
-        this.defMultiplier.Remove(multiplier);
+        bool b = this.defMultiplier.Remove(multiplier);
+        Debug.Log(b);
     }
     public void RemoveSpeedMultiplier(float multiplier)
     {
