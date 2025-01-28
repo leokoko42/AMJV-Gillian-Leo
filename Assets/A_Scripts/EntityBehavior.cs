@@ -34,6 +34,11 @@ public class EntityBehavior : MonoBehaviour
     [SerializeField] private GameObject behavior_menu;
     public UnityEvent show_menu;
     public UnityEvent hide_menu;
+    [SerializeField] private GameObject left_eye;
+    [SerializeField] private GameObject right_eye;
+    [SerializeField] private Material offense_mat;
+    [SerializeField] private Material neutral_mat;
+    [SerializeField] private Material defense_mat;
 
     private string item_equipped;
 
@@ -363,16 +368,22 @@ public class EntityBehavior : MonoBehaviour
     public void OffenseBehavior()
     {
         allyEntity.SetBehavior(Entity.Behavior.Offense);
+        left_eye.GetComponent<MeshRenderer>().material = offense_mat;
+        right_eye.GetComponent<MeshRenderer>().material = offense_mat;
     }
 
     public void NeutralBehavior()
     {
         allyEntity.SetBehavior(Entity.Behavior.Neutral);
+        left_eye.GetComponent<MeshRenderer>().material = neutral_mat;
+        right_eye.GetComponent<MeshRenderer>().material = neutral_mat;
     }
 
     public void DefenseBehavior()
     {
         allyEntity.SetBehavior(Entity.Behavior.Defense);
+        left_eye.GetComponent<MeshRenderer>().material = defense_mat;
+        right_eye.GetComponent<MeshRenderer>().material = defense_mat;
     }
 
     public void SetKing()
