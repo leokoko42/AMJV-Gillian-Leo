@@ -41,22 +41,15 @@ public class UnitPlacement : MonoBehaviour
         {
             Vector3 mousePosition = Input.mousePosition;
             Ray ray = _UIcamera.ScreenPointToRay(mousePosition);
-            //if (shopManager.GetSelectedEntity() != null)
-            //{
-            //    if (!Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerUI))
-            //    {
-            //        shopManager.DeselectEntity();
-            //    }
-            //}
-            //else
-            //{
+            if (!Physics.Raycast(ray, out _, float.MaxValue, layerUI))
+            {
                 if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerPlacement))
                 {
                     Vector3 point = hit.point;
                     Vector3 spawn_pos = new Vector3(point.x, point.y + 1.5f, point.z);
                     if (to_spawn_object != null)
                     {
-                        if (spawn_cost <= data.GetCoins() && entity_occurences[to_spawn_name] < gameManager.entity_max_occurences[to_spawn_name])
+                        if (spawn_cost <= DataHolder.GetCoins() && entity_occurences[to_spawn_name] < gameManager.entity_max_occurences[to_spawn_name])
                         {
                             GameObject entity = Instantiate(to_spawn_object, spawn_pos, Quaternion.identity);
                             BasicEntity basicEntity = entity.GetComponent<BasicEntity>();
@@ -67,7 +60,8 @@ public class UnitPlacement : MonoBehaviour
                         }
                     }
                 }
-            //}
+            }
+            
         }
 
         if (Input.GetMouseButtonDown(1))

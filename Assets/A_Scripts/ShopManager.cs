@@ -55,10 +55,12 @@ public class ShopManager : MonoBehaviour
             rectTransform.anchorMax = new Vector3(0.5f, 0.88f - (0.88f - 0.2f) / (n_prefabs - 1) * i);
             rectTransform.anchoredPosition = Vector2.zero;
 
-            TMP_Text buttonText = newButton.GetComponentInChildren<TMP_Text>();
+            TMP_Text buttonText = newButton.transform.Find("Name").GetComponent<TMP_Text>();
+            TMP_Text costText = newButton.transform.Find("Cost").GetComponent<TMP_Text>();
             if (buttonText != null)
             {
                 buttonText.text = prefabs[i].name;
+                costText.text = prefabs[i].GetComponent<BasicEntity>().GetCost() +" Coins";
             }
 
             Button buttonComponent = newButton.GetComponent<Button>();

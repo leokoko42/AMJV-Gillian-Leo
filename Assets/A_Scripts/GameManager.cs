@@ -29,13 +29,13 @@ public class GameManager : MonoBehaviour
     private GameObject selected_entity;
 
     [SerializeField] private ShopManager shopManager;
-    [SerializeField] private DataHolder data;
 
     private bool shop_active;
     private bool game_active;
 
-    private int coins_on_win;
     [SerializeField] private GameObject victoryScreen;
+    [SerializeField] private Button next_level_button;
+    [SerializeField] private Button victory_quit_button;
 
     [SerializeField] private GameObject uiButtons;
     [SerializeField] private Button pauseButton;
@@ -66,6 +66,8 @@ public class GameManager : MonoBehaviour
         settingsButton.onClick.AddListener(SettingsMenu);
         quitButton.onClick.AddListener(QuitGame);
         pauseText.SetActive(false);
+        next_level_button.onClick.AddListener(NextScene);
+        victory_quit_button.onClick.AddListener(QuitGame);
     }
 
     // Update is called once per frame
@@ -117,7 +119,7 @@ public class GameManager : MonoBehaviour
 
     void UpdateTime()
     {
-        int time_elapsed = (int)(Time.time - data.GetStartTime());
+        int time_elapsed = (int)(Time.time - DataHolder.GetStartTime());
         int seconds = time_elapsed % 60;
         int minutes = (time_elapsed / 60) % 60;
         int hours = time_elapsed / 3600;
@@ -137,14 +139,14 @@ public class GameManager : MonoBehaviour
 
     public void AddCoins(int amount)
     {
-        data.SetCoins( data.GetCoins() + amount);
-        coin_text.text = data.GetCoins().ToString();
+        DataHolder.SetCoins(DataHolder.GetCoins() + amount);
+        coin_text.text = DataHolder.GetCoins().ToString();
     }
 
     public void RemoveCoins(int amount)
     {
-        data.SetCoins(data.GetCoins() - amount);
-        coin_text.text = data.GetCoins().ToString();
+        DataHolder.SetCoins(DataHolder.GetCoins() - amount);
+        coin_text.text = DataHolder.GetCoins().ToString();
     }
 
     public void AddEnemy(GameObject e)
@@ -245,13 +247,13 @@ public class GameManager : MonoBehaviour
         gameUI.SetActive(b);
     }
 
-    public int GetCoinsOnWin() { return coins_on_win; }
-
     private void Victory()
     {
         SetGameActive(false);
         victoryScreen.SetActive(true);
         gameUI.SetActive(false);
+        DataHolder.SetCoins(DataHolder.GetCoins() + DataHolder.GetCoinsPerRound());
+        Time.timeScale = 0f;
     }
 
     private void Defeat() 
@@ -275,6 +277,8 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+    void NextScene() { SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); }
 
     public void EntityDied()
     {

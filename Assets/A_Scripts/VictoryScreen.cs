@@ -19,7 +19,7 @@ public class VictoryScreen : MonoBehaviour
 
     public void OnEnable()
     {
-        coinsGained.text = "Coins Gained : " + gameManager.GetCoinsOnWin().ToString();
+        coinsGained.text = "Coins Gained : " + DataHolder.GetCoinsPerRound().ToString();
         gameObject.GetComponent<HideOnStart>().Unhide();
     }
 
