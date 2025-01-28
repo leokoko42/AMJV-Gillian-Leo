@@ -9,6 +9,7 @@ public class HideOnStart : MonoBehaviour
     {
         original_scale = transform.localScale;
         transform.localScale = Vector3.zero;
+        unhidden = false;
     }
 
     // Update is called once per frame

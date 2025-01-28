@@ -5,9 +5,10 @@ public class DataHolder : MonoBehaviour
 {
     public static DataHolder Instance;
 
-    public int coins;
-    private float start_time;
-    private int retries;
+    private static int coins_per_round;
+    private static int coins;
+    private static float start_time;
+    private static int retries;
 
     //Item stats
     public static float earring_reduction_factor;
@@ -30,14 +31,17 @@ public class DataHolder : MonoBehaviour
         vial_poison_precentage = 0.1f;
     }
 
-    public int GetCoins() { return coins; }
-    public void SetCoins(int c) { coins = c; }
+    public static int GetCoinsPerRound() { return coins_per_round;}
+    public static void SetCoinsPerRound(int cpr) {  coins_per_round = cpr;}
 
-    public float GetStartTime() { return start_time; }
+    public static int GetCoins() { return coins; }
+    public static void SetCoins(int c) { coins = c; }
 
-    public int GetRetries() { return retries; }
+    public static float GetStartTime() { return start_time; }
 
-    public void SetRetries(int r) { retries = r; }
+    public static int GetRetries() { return retries; }
+
+    public static void SetRetries(int r) { retries = r; }
 
     public static float GetEarringReductionFactor() { return earring_reduction_factor; }
     public static float GetMaskRevengeBoost() { return mask_revenge_boost; }
