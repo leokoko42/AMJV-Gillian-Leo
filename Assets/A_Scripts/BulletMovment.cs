@@ -13,15 +13,26 @@ public class BulletMovment : MonoBehaviour
     [SerializeField] private float theta = 20f;
 
     [SerializeField] private bool isPoisoned = false;
+    private float poisonAmount;
     
-    public void Init(float new_attack, GameObject new_summoner) {
+    public void Init(float new_attack, GameObject new_summoner, float poisonAmt) {
         summoner = new_summoner;
         attack = new_attack;
+        if (poisonAmount > 0)
+        {
+            isPoisoned = true;
+            poisonAmount = poisonAmt;
+        }
     }
-    public void Init(float new_attack, GameObject new_target, GameObject new_summoner) {
+    public void Init(float new_attack, GameObject new_target, GameObject new_summoner, float poisonAmt) {
         target = new_target;
         summoner = new_summoner;
         attack = new_attack;
+        if (poisonAmount > 0)
+        {
+            isPoisoned = true;
+            poisonAmount = poisonAmt;
+        }
     }
     public void FixedUpdate() {
         if (autoAim) {
@@ -104,7 +115,7 @@ public class BulletMovment : MonoBehaviour
         HealthManager targetHealth = collider.GetComponent<HealthManager>();
         targetHealth.Damage(attack);
         if (isPoisoned) {
-            collider.GetComponent<EntityBehavior>().ApplyPoison(attack);
+            collider.GetComponent<EntityBehavior>().ApplyPoison(poisonAmount);
         }
         Destroy(gameObject);
     }

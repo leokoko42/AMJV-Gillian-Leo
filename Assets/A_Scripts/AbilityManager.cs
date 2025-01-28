@@ -129,7 +129,7 @@ public class AbilityManager : MonoBehaviour
             float y = UnityEngine.Random.value;
             Vector3 delta = (new Vector3(r*Mathf.Cos(theta), 10+y, r*Mathf.Sin(theta)));
             GameObject bullet = Instantiate(archerAbilityBullet, center+delta, new Quaternion(90,0,0,0));
-            bullet.GetComponent<BulletMovment>().Init(attack, attacker);
+            bullet.GetComponent<BulletMovment>().Init(attack, attacker, 8*abilityMultiplier);
             yield return new WaitForSeconds(0.2f);
         }
     }

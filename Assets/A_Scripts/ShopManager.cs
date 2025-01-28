@@ -83,7 +83,8 @@ public class ShopManager : MonoBehaviour
                 BasicEntity ally_behavior = ally.GetComponent<BasicEntity>();
                 ally_behavior.SetIsActive(true);
             }
-            revenge_mask_wielder.GetComponent<EntityBehavior>().SetAlliesOnStart(gameManager.ally_list.Count);
+            if (revenge_mask_wielder != null) 
+                revenge_mask_wielder.GetComponent<EntityBehavior>().SetAlliesOnStart(gameManager.ally_list.Count);
             foreach (GameObject enemy in gameManager.enemy_list)
             {
                 BasicEntity enemy_behavior = enemy.GetComponent<BasicEntity>();

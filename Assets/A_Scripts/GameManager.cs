@@ -262,6 +262,7 @@ public class GameManager : MonoBehaviour
 
     public void EntityDied()
     {
-        shopManager.revenge_mask_wielder.GetComponent<EntityBehavior>().UpdateRevengeMultiplier();
+        if (shopManager.revenge_mask_wielder !=  null)
+            shopManager.revenge_mask_wielder.GetComponent<EntityBehavior>().UpdateRevengeMultiplier();
     }
 }
