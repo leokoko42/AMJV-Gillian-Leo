@@ -312,12 +312,6 @@ public class EntityBehavior : MonoBehaviour
 
         //Fire
     private bool isOnFire = false;
-    private void Update() {
-        if (Input.GetKeyDown("space")) {
-            Debug.Log("FIRE");
-            ApplyPoison(10);
-        }
-    }
     public void ApplyFire(float time) {
         if (isOnFire) {
             StopCoroutine(FireForSeconds(time));

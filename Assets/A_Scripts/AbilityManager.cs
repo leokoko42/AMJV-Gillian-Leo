@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 public class AbilityManager : MonoBehaviour
@@ -9,6 +10,7 @@ public class AbilityManager : MonoBehaviour
     private EntityBehavior attackEntityBehavior;
     private BasicEntity attackerEntity;
     private LayerMask entityLayerMask;
+    private List<GameObject> summonnedEntitiesList;
     public float abilityMultiplier = 1f;
     private void Start() {
         entityLayerMask = LayerMask.GetMask("Entity");
@@ -95,6 +97,14 @@ public class AbilityManager : MonoBehaviour
 
     public bool SummonerAbility(GameObject attacker) {
         return true;
+    }
+
+    public void AddSummonnedInstance(GameObject summonned) {
+        summonnedEntitiesList.Add(summonned);
+    }
+
+    public void RemoveSummonnedInstance(GameObject summonned) {
+        summonnedEntitiesList.Remove(summonned);
     }
     
     public bool MonkAbility(GameObject attacker) {

@@ -80,6 +80,10 @@ PrefabInstance:
       propertyPath: show_menu.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8135762676644378917, guid: 039409ee0e26dd54e86d7701cfcf6dcc, type: 3}
+      propertyPath: normalWarriorMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: d3ae65387bfb28d47adb5c3e21e75569, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 1018973822246205719, guid: 039409ee0e26dd54e86d7701cfcf6dcc, type: 3}
