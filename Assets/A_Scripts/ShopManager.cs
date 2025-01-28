@@ -18,6 +18,8 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private Button revenge_mask;
     [SerializeField] private Button resurrection_earring;
 
+    public GameObject heal_halo_wielder, power_belt_wielder, poison_vial_wielder, revenge_mask_wielder, resurrection_earring_wielder;
+
     public UnityEvent<GameObject> change_spawn;
     private GameObject[] ally_prefabs;
 
@@ -27,7 +29,7 @@ public class ShopManager : MonoBehaviour
     void Start()
     {
         start.onClick.AddListener(StartBattle);
-        ally_prefabs = gameManager.FindPrefabs("Assets/Prefabs/Entities/Allies");
+        ally_prefabs = gameManager.FindPrefabs("AllyEntities");
         CreateButtons(ally_prefabs);
         gameManager.SetGameActive(false);
         heal_halo.onClick.AddListener(() => EquipItem("HealHalo"));
@@ -48,23 +50,18 @@ public class ShopManager : MonoBehaviour
         int n_prefabs = prefabs.Length;
         for (int i = 0; i < n_prefabs; i++)
         {
-            // Instantiate a new button from the prefab
             GameObject newButton = Instantiate(button_prefab, parent_panel);
             RectTransform rectTransform = newButton.GetComponent<RectTransform>();
-            // Set the button's position (optional, handled by layout components if used)
             rectTransform.anchorMin = new Vector3(0.5f, 0.88f - (0.88f - 0.2f) / (n_prefabs - 1) * i);
             rectTransform.anchorMax = new Vector3(0.5f, 0.88f - (0.88f - 0.2f) / (n_prefabs - 1) * i);
             rectTransform.anchoredPosition = Vector2.zero;
-            //newButton.transform.localPosition = new Vector3(0, 370 - 700/(n_prefabs-1) * i, 0);
 
-            // Change the button's text
             TMP_Text buttonText = newButton.GetComponentInChildren<TMP_Text>();
             if (buttonText != null)
             {
                 buttonText.text = prefabs[i].name;
             }
 
-            // Add a click event to the button
             Button buttonComponent = newButton.GetComponent<Button>();
             if (buttonComponent != null)
             {
@@ -87,6 +84,7 @@ public class ShopManager : MonoBehaviour
                 BasicEntity ally_behavior = ally.GetComponent<BasicEntity>();
                 ally_behavior.SetIsActive(true);
             }
+            revenge_mask_wielder.GetComponent<EntityBehavior>().SetAlliesOnStart(gameManager.ally_list.Count);
             foreach (GameObject enemy in gameManager.enemy_list)
             {
                 BasicEntity enemy_behavior = enemy.GetComponent<BasicEntity>();
@@ -118,37 +116,38 @@ public class ShopManager : MonoBehaviour
     {
         if (selected_entity != null)
         {
-            EntityBehavior eb = selected_entity.GetComponent<EntityBehavior>();
-            string prev_item = eb.GetItemEquipped();
-            SetButtonState(prev_item, true);
-            eb.SetItemEquipped(item);
-            SetButtonState(item, false);
+            SetItemWielder(item, selected_entity);
         }
     }
 
-    private void SetButtonState(string item, bool state)
+    public void SetItemWielder(string item, GameObject w)
     {
         switch (item)
         {
             case "HealHalo":
-                heal_halo.interactable = state;
-                heal_halo.transform.GetChild(1).gameObject.SetActive(state);
+                if (heal_halo_wielder != null) { Debug.Log("HH"); heal_halo_wielder.GetComponent<EntityBehavior>().SetItemEquipped(""); }
+                heal_halo_wielder = w;
+                heal_halo_wielder.GetComponent<EntityBehavior>().SetItemEquipped("HealHalo");
                 break;
             case "PowerBelt":
-                power_belt.interactable = state;
-                power_belt.transform.GetChild(1).gameObject.SetActive(state);
+                if (power_belt_wielder != null) { power_belt_wielder.GetComponent<EntityBehavior>().SetItemEquipped(""); }
+                power_belt_wielder = w;
+                power_belt_wielder.GetComponent<EntityBehavior>().SetItemEquipped("PowerBelt");
                 break;
             case "PoisonVial":
-                poison_vial.interactable = state;
-                poison_vial.transform.GetChild(1).gameObject.SetActive(state);
+                if (poison_vial_wielder != null) { poison_vial_wielder.GetComponent<EntityBehavior>().SetItemEquipped(""); }
+                poison_vial_wielder = w;
+                poison_vial_wielder.GetComponent<EntityBehavior>().SetItemEquipped("PoisonVial");
                 break;
-            case "RevengeAmulet":
-                revenge_mask.interactable = state;
-                revenge_mask.transform.GetChild(1).gameObject.SetActive(state);
+            case "RevengeMask":
+                if (revenge_mask_wielder != null) { revenge_mask_wielder.GetComponent<EntityBehavior>().SetItemEquipped(""); }
+                revenge_mask_wielder = w;
+                revenge_mask_wielder.GetComponent<EntityBehavior>().SetItemEquipped("RevengeMask");
                 break;
             case "ResurrectionEarring":
-                resurrection_earring.interactable = state;
-                resurrection_earring.transform.GetChild(1).gameObject.SetActive(state);
+                if (resurrection_earring_wielder != null) { resurrection_earring_wielder.GetComponent<EntityBehavior>().SetItemEquipped(""); }
+                resurrection_earring_wielder = w;
+                resurrection_earring_wielder.GetComponent<EntityBehavior>().SetItemEquipped("ResurrectionEarring");
                 break;
             default:
                 break;

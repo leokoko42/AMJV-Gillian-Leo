@@ -11,6 +11,7 @@ public class HealthManager : MonoBehaviour
     public UnityEvent<float> damaged;
     public UnityEvent<float> damage_absorbed;
     public UnityEvent<float> healed;
+    public UnityEvent death;
     private LayerMask layerMask;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -41,13 +42,15 @@ public class HealthManager : MonoBehaviour
         healed.Invoke(newHp-entityHp);
     }
 
-    public float Damage(float damageAmount) {
+    public float Damage(float damageAmount)
+    {
         float entityHp = entity.GetHP();
         float absorbed = Mathf.Min(damageAmount, entity.GetDef()*entity.GetDefMultiplier());
         damageAmount -= absorbed;
         float newHp = entityHp - damageAmount;
         if (newHp <= 0) {
             Death();
+            entity.SetHP(newHp);
         }
         else {
             entity.SetHP(newHp);
@@ -59,13 +62,31 @@ public class HealthManager : MonoBehaviour
     }
 
     public void Death() {
-        if (GetComponent<BasicEntity>().GetIsEnemy()) {
-            gameManager.RemoveEnemy(gameObject);
+        EntityBehavior eb = gameObject.GetComponent<EntityBehavior>();
+        if (eb.GetItemEquipped() == "ResurrectionEarring")
+        {
+            eb.UnequipItem();
+            gameObject.transform.localScale *= 0.75f;
+            float reduction_factor = DataHolder.GetEarringReductionFactor();
+            entity.SetMaxHP(entity.GetMaxHP() / reduction_factor);
+            entity.SetHP(entity.GetMaxHP());
+            entity.SetAttack(entity.GetAttack() / (reduction_factor/2 + 0.5f));
+            entity.SetDef(entity.GetDef() / (reduction_factor / 2 + 0.5f));
         }
-        else {
-            gameManager.RemoveAlly(gameObject);
+        else
+        {
+            death.Invoke();
+            if (GetComponent<BasicEntity>().GetIsEnemy())
+            {
+                gameManager.RemoveEnemy(gameObject);
+            }
+            else
+            {
+                gameManager.RemoveAlly(gameObject);
+            }
+            Destroy(gameObject);
         }
-        Destroy(gameObject);
+       
     }
 
 }

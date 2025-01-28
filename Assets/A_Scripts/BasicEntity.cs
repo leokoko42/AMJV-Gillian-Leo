@@ -155,10 +155,10 @@ public class BasicEntity : Entity
     }
 
 
-    private List<float> attackMultiplier = new List<float>();
-    private List<float> defMultiplier = new List<float>();
-    private List<float> speedMultiplier = new List<float>();
-    private List<float> cooldownMultiplier = new List<float>();
+    public List<float> attackMultiplier = new List<float>();
+    public List<float> defMultiplier = new List<float>();
+    public List<float> speedMultiplier = new List<float>();
+    public List<float> cooldownMultiplier = new List<float>();
 
 
     public void AddAttackMultiplier(float multiplier)
