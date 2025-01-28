@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Analytics;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using static UnityEditor.Progress;
 using static UnityEngine.EventSystems.EventTrigger;
@@ -35,13 +36,9 @@ public class EntityBehavior : MonoBehaviour
     [SerializeField] private GameObject health_bar;
     [SerializeField] private GameObject mana_bar;
     [SerializeField] private GameObject behavior_menu;
-    public UnityEvent show_menu;
-    public UnityEvent hide_menu;
-    [SerializeField] private GameObject left_eye;
-    [SerializeField] private GameObject right_eye;
-    [SerializeField] private Material offense_mat;
-    [SerializeField] private Material neutral_mat;
-    [SerializeField] private Material defense_mat;
+    public UnityEvent show_menu, hide_menu;
+    [SerializeField] private GameObject left_eye, right_eye;
+    [SerializeField] private Material offense_mat, neutral_mat, defense_mat;
 
     [SerializeField] private GameObject heal_halo;
     [SerializeField] private GameObject power_belt;
@@ -54,6 +51,8 @@ public class EntityBehavior : MonoBehaviour
 
     private int allies_on_start;
     private float revenge_mult;
+    [SerializeField] ParticleSystem fireParticles, iceParticles, poisonParticles;
+    private float initialDef;
 
     void Start()
     {
@@ -66,7 +65,6 @@ public class EntityBehavior : MonoBehaviour
 
         isOnCooldown = false;
 
-        entity_speed = allyEntity.GetSpeed();
         allyNavMeshAgent.stoppingDistance = allyEntity.GetRange();
 
         touchingGround = true;
@@ -96,6 +94,10 @@ public class EntityBehavior : MonoBehaviour
         RefreshEntitiesLists();
 
         revenge_mult = 1f;
+        initialDef = allyEntity.GetDef();
+        fireParticles.Stop();
+        iceParticles.Stop();
+        poisonParticles.Stop();
     }
     
     public void RefreshEntitiesLists() {
@@ -126,13 +128,14 @@ public class EntityBehavior : MonoBehaviour
         allyNavMeshAgent.SamplePathPosition(NavMesh.AllAreas, 0, out hit);
         if (hit.mask != currentNavMeshMask) {
             currentNavMeshMask = hit.mask;
+            entity_speed = allyEntity.GetSpeed();
             if (hit.mask == 1) //On grass ground
             {
-                allyNavMeshAgent.speed = entity_speed * allyEntity.GetSpeedMultiplier();
+                allyNavMeshAgent.speed = entity_speed;
             }
             else if (hit.mask == 8) //On sand ground
             {
-                allyNavMeshAgent.speed = entity_speed * allyEntity.GetSpeedMultiplier() * 0.5f;
+                allyNavMeshAgent.speed = entity_speed * 0.5f;
             }
         }
     }
@@ -270,7 +273,7 @@ public class EntityBehavior : MonoBehaviour
     }
 
     private void AttackOther(GameObject oponent, float range) {
-        float attack = allyEntity.GetAttack() * allyEntity.GetAttackMultiplier();
+        float attack = allyEntity.GetAttack();
 
         if (range>5) { //Add a bool variable to ensure if an entity is ranged or not ?
             RangedAttack(oponent, attack);
@@ -298,12 +301,15 @@ public class EntityBehavior : MonoBehaviour
     //Differents corroutines
     public IEnumerator AttackCooldown()
     {
-        float attackSpeed = allyEntity.GetAttackSpeed() * allyEntity.GetCooldownMultiplier();
+        float attackSpeed = allyEntity.GetAttackSpeed();
         isOnCooldown = true;
         yield return new WaitForSeconds(attackSpeed);
         isOnCooldown = false;
     }
 
+    //Special Status
+
+        //Knockback
     public void ApplyKnockback(Vector3 origin, float stunCooldown, float strenght) {
         StartCoroutine(Knockback(origin, stunCooldown, strenght));
     }
@@ -320,6 +326,74 @@ public class EntityBehavior : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         stunned = false;
+    }
+
+        //Fire
+    private bool isOnFire = false;
+    private void Update() {
+        if (Input.GetKeyDown("space")) {
+            Debug.Log("FIRE");
+            ApplyPoison(10);
+        }
+    }
+    public void ApplyFire(float time) {
+        if (isOnFire) {
+            StopCoroutine(FireForSeconds(time));
+            StartCoroutine(FireForSeconds(time));
+        }
+        else {
+            StartCoroutine(FireForSeconds(time));
+            StartCoroutine(FireDamage());
+        }
+    }
+    private IEnumerator FireForSeconds(float cooldown) {
+        isOnFire = true;
+        fireParticles.Play();
+        yield return new WaitForSeconds(cooldown);
+        isOnFire = false;
+        fireParticles.Stop();
+    }
+    private IEnumerator FireDamage() {
+        HealthManager allyHealth = GetComponent<HealthManager>();
+        while(isOnFire) {
+            allyHealth.TrueDamage(allyEntity.GetMaxHP()/100);
+            Debug.Log(allyEntity.GetMaxHP()/100);
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+        //Poison
+    private int nbPoison = 0;
+    public void ApplyPoison(float amount) {
+        StartCoroutine(PoisonForSeconds(amount));
+    }
+    private IEnumerator PoisonForSeconds(float amount) {
+        nbPoison++;
+        float totalDebuff = Mathf.Pow(0.95f, amount);
+        allyEntity.AddDefMultiplier(totalDebuff);
+        poisonParticles.Play();
+        yield return new WaitForSeconds(10);
+        nbPoison--;
+        allyEntity.RemoveDefMultiplier(totalDebuff);
+        if (nbPoison == 0) {
+            poisonParticles.Stop();
+        }
+    }
+        //Ice
+    private int nbIce = 0;
+    public void ApplyIce(float time) {
+        StartCoroutine(IceForSeconds(time));
+    }
+    private IEnumerator IceForSeconds(float time) {
+        nbIce++;
+        allyEntity.AddCooldownMultiplier(1.1f);
+        iceParticles.Play();
+        yield return new WaitForSeconds(time);
+        nbIce--;
+        allyEntity.RemoveCooldownMultiplier(1.1f);
+        if (nbIce == 0) {
+            iceParticles.Stop();
+        }
     }
 
     public void AddCrown()
