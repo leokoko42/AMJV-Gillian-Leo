@@ -7,12 +7,12 @@ public class BasicEntity : Entity
 
     public override float GetAttack()
     {
-        return this.attack;
+        return this.attack * GetAttackMultiplier();
     }
 
     public override float GetAttackSpeed()
     {
-        return this.attackSpeed;
+        return this.attackSpeed * GetCooldownMultiplier();
     }
 
     public override Behavior GetBehavior()
@@ -27,7 +27,7 @@ public class BasicEntity : Entity
 
     public override float GetDef()
     {
-        return this.def;
+        return this.def * GetDefMultiplier();
     }
 
     public override float GetHP()
@@ -72,7 +72,7 @@ public class BasicEntity : Entity
 
     public override float GetSpeed()
     {
-        return this.speed;
+        return this.speed * GetSpeedMultiplier();
     }
     public float GetManaRegen()
     {
@@ -195,28 +195,28 @@ public class BasicEntity : Entity
         this.cooldownMultiplier.Remove(multiplier);
     }
 
-    public float GetAttackMultiplier() {
+    private float GetAttackMultiplier() {
         float toatalMultiplier = 1f;
         foreach (float multiplier in this.attackMultiplier) {
             toatalMultiplier *= multiplier;
         }
         return toatalMultiplier;
     }
-    public float GetDefMultiplier() {
+    private float GetDefMultiplier() {
         float toatalMultiplier = 1f;
         foreach (float multiplier in this.defMultiplier) {
             toatalMultiplier *= multiplier;
         }
         return toatalMultiplier;
     }
-    public float GetSpeedMultiplier() {
+    private float GetSpeedMultiplier() {
         float toatalMultiplier = 1f;
         foreach (float multiplier in this.speedMultiplier) {
             toatalMultiplier *= multiplier;
         }
         return toatalMultiplier;
     }
-    public float GetCooldownMultiplier() {
+    private float GetCooldownMultiplier() {
         float toatalMultiplier = 1f;
         foreach (float multiplier in this.cooldownMultiplier) {
             toatalMultiplier *= multiplier;

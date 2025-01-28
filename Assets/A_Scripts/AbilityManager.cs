@@ -114,7 +114,7 @@ public class AbilityManager : MonoBehaviour
             return false;
         }
         else {
-            float attack = attackerEntity.GetAttack() * attackerEntity.GetAttackMultiplier() * abilityMultiplier;
+            float attack = attackerEntity.GetAttack() * abilityMultiplier;
             StartCoroutine(ArcherAbilityBullets(attacker,target,attack));
         }
         return true;
@@ -139,7 +139,7 @@ public class AbilityManager : MonoBehaviour
         Collider[] colliders = Physics.OverlapCapsule(attacker.transform.position - delta, attacker.transform.position + delta, 6f, entityLayerMask);
         foreach (Collider collider in colliders) {
             if (attacker.tag != collider.gameObject.tag) {
-                collider.GetComponent<HealthManager>().Damage(25 * attackerEntity.GetAttackMultiplier() * abilityMultiplier);
+                collider.GetComponent<HealthManager>().Damage(attackerEntity.GetAttack() * abilityMultiplier);
                 collider.GetComponent<EntityBehavior>().ApplyKnockback(transform.position, 3, 10 * abilityMultiplier);
             }
         }
