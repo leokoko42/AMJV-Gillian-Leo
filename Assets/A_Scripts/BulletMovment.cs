@@ -18,7 +18,7 @@ public class BulletMovment : MonoBehaviour
     public void Init(float new_attack, GameObject new_summoner, float poisonAmt) {
         summoner = new_summoner;
         attack = new_attack;
-        if (poisonAmount > 0)
+        if (poisonAmt > 0)
         {
             isPoisoned = true;
             poisonAmount = poisonAmt;
@@ -28,13 +28,17 @@ public class BulletMovment : MonoBehaviour
         target = new_target;
         summoner = new_summoner;
         attack = new_attack;
-        if (poisonAmount > 0)
+        if (poisonAmt > 0)
         {
             isPoisoned = true;
             poisonAmount = poisonAmt;
         }
     }
     public void FixedUpdate() {
+        if (!target) {
+            Debug.Log("target died");
+            Destroy(gameObject);
+        }
         if (autoAim) {
             AutoAim();
         }

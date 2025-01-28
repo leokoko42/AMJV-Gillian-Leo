@@ -16949,7 +16949,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ability: 0
   entityBullet: {fileID: 0}
-  allyEntity: {fileID: 8923120151016547523}
+  basicEntity: {fileID: 8923120151016547523}
   allyRigidBody: {fileID: -4729630872209467906}
   allyAbility: {fileID: 1987572297502440785}
   allyNavMeshAgent: {fileID: 505205278999401064}
@@ -17229,6 +17229,7 @@ MonoBehaviour:
   cost: 0
   range: 0
   manaRegen: 0
+  defMultiplier: []
 --- !u!114 &1987572297502440785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17245,6 +17246,7 @@ MonoBehaviour:
   rageWarriorMaterial: {fileID: 0}
   archerAbilityBullet: {fileID: 0}
   summonPrefab: {fileID: 0}
+  summonnedEntitiesList: []
   abilityMultiplier: 1
 --- !u!54 &-4729630872209467906
 Rigidbody:

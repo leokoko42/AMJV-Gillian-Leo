@@ -104,7 +104,6 @@ public class AbilityManager : MonoBehaviour
             return false;
         }
         int x = Math.Min(3, nbSummons+2);
-        Debug.Log(x);
         for (int i=nbSummons; i<x; i++) {
             GameObject summonned = Instantiate(summonPrefab, transform.position, new Quaternion());
             AddSummonnedInstance(summonned);
@@ -181,6 +180,7 @@ public class AbilityManager : MonoBehaviour
         foreach (Collider collider in colliders) {
             if (attacker.tag != collider.gameObject.tag) {
                 EntityBehavior targetBehavior = collider.GetComponent<EntityBehavior>();
+                Debug.Log(targetBehavior);
                 int randomStatus = UnityEngine.Random.Range(0,3);
                 switch (randomStatus) {
                     case 0:
