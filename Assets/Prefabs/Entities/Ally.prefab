@@ -2543,6 +2543,11 @@ MonoBehaviour:
   offense_mat: {fileID: 2100000, guid: 7e5054007b034c14dbf1f64032530cb0, type: 2}
   neutral_mat: {fileID: 2100000, guid: d1b124a4181f1ba44b0f93c75ab1894e, type: 2}
   defense_mat: {fileID: 2100000, guid: d07abe2f954ad7849bbcb8ea2ec6aaeb, type: 2}
+  heal_halo: {fileID: 87833386114046496, guid: 146aab4e851979545bffc89f07f51dce, type: 3}
+  power_belt: {fileID: 4745769268322188689, guid: 54b8c1cba96f6ea41b407e0273f6b10c, type: 3}
+  poison_vial: {fileID: 3169522604264933566, guid: cb771fe768dec7c4a94b3d667a68c6bd, type: 3}
+  revenge_mask: {fileID: 3086522939606496391, guid: 6f9daec881f95634d8f3c414b1b2c89d, type: 3}
+  resurrection_earring: {fileID: 5165091197079948516, guid: 6a94ea08ea5d9ae468388fd469f3126e, type: 3}
 --- !u!114 &5417234732440709696
 MonoBehaviour:
   m_ObjectHideFlags: 0

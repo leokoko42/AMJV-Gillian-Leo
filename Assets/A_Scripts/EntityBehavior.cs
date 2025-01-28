@@ -39,8 +39,14 @@ public class EntityBehavior : MonoBehaviour
     [SerializeField] private Material offense_mat;
     [SerializeField] private Material neutral_mat;
     [SerializeField] private Material defense_mat;
+    [SerializeField] private GameObject heal_halo;
+    [SerializeField] private GameObject power_belt;
+    [SerializeField] private GameObject poison_vial;
+    [SerializeField] private GameObject revenge_mask;
+    [SerializeField] private GameObject resurrection_earring;
 
     private string item_equipped;
+    private GameObject item_visual;
 
     void Start()
     {
@@ -311,22 +317,22 @@ public class EntityBehavior : MonoBehaviour
     {
         crown.SetActive(true);
         Vector3 hb_pos = health_bar.transform.position;
-        health_bar.transform.position = new Vector3(hb_pos.x, hb_pos.y+25, hb_pos.z);
+        health_bar.transform.position = new Vector3(hb_pos.x, hb_pos.y + 0.25f, hb_pos.z);
         Vector3 mb_pos = mana_bar.transform.position;
-        mana_bar.transform.position = new Vector3(mb_pos.x, mb_pos.y + 25, mb_pos.z);
+        mana_bar.transform.position = new Vector3(mb_pos.x, mb_pos.y + 0.25f, mb_pos.z);
         Vector3 bm_pos = behavior_menu.transform.position;
-        behavior_menu.transform.position = new Vector3(mb_pos.x, mb_pos.y + 25, mb_pos.z);
+        behavior_menu.transform.position = new Vector3(mb_pos.x, mb_pos.y + 0.25f, mb_pos.z);
     }
 
     public void RemoveCrown()
     {
         crown.SetActive(false);
         Vector3 hb_pos = health_bar.transform.position;
-        health_bar.transform.position = new Vector3(hb_pos.x, hb_pos.y - 25, hb_pos.z);
+        health_bar.transform.position = new Vector3(hb_pos.x, hb_pos.y - 0.25f, hb_pos.z);
         Vector3 mb_pos = mana_bar.transform.position;
-        mana_bar.transform.position = new Vector3(mb_pos.x, mb_pos.y - 25, mb_pos.z);
+        mana_bar.transform.position = new Vector3(mb_pos.x, mb_pos.y - 0.25f, mb_pos.z);
         Vector3 bm_pos = behavior_menu.transform.position;
-        behavior_menu.transform.position = new Vector3(mb_pos.x, mb_pos.y - 25, mb_pos.z);
+        behavior_menu.transform.position = new Vector3(mb_pos.x, mb_pos.y - 0.25f, mb_pos.z);
     }
 
     public void ChangeDamageDealt(float dmg)
@@ -401,7 +407,31 @@ public class EntityBehavior : MonoBehaviour
 
     public void SetItemEquipped(string item) 
     { 
+        if (item != null)
+        {
+            Destroy(item_visual);
+        }
         item_equipped = item;
+        switch (item)
+        {
+            case "HealHalo":
+                item_visual = Instantiate(heal_halo, transform.position, Quaternion.identity, transform);
+                break;
+            case "PowerBelt":
+                item_visual = Instantiate(power_belt, transform.position, Quaternion.identity, transform);
+                break;
+            case "PoisonVial":
+                item_visual = Instantiate(poison_vial, transform.position, Quaternion.identity, transform);
+                break;
+            case "RevengeMask":
+                item_visual = Instantiate(revenge_mask, transform.position, Quaternion.identity, transform);
+                break;
+            case "ResurrectionEarring":
+                item_visual = Instantiate(resurrection_earring, transform.position, Quaternion.identity, transform);
+                break;
+            default:
+                break;
+        }
     }
 
     public string GetItemEquipped() {  return item_equipped; }

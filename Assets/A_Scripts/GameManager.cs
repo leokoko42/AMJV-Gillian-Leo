@@ -218,6 +218,7 @@ public class GameManager : MonoBehaviour
     {
         game_active = b;
         uiButtons.SetActive(b);
+        gameUI.SetActive(b);
     }
 
     public int GetCoinsOnWin() { return coins_on_win; }

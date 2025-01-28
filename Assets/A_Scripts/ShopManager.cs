@@ -12,10 +12,10 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private GameObject shop;
     [SerializeField] private GameObject button_prefab;
     [SerializeField] private Transform parent_panel;
-    [SerializeField] private Button heal_gloves;
-    [SerializeField] private Button power_ring;
+    [SerializeField] private Button heal_halo;
+    [SerializeField] private Button power_belt;
     [SerializeField] private Button poison_vial;
-    [SerializeField] private Button revenge_amulet;
+    [SerializeField] private Button revenge_mask;
     [SerializeField] private Button resurrection_earring;
 
     public UnityEvent<GameObject> change_spawn;
@@ -26,11 +26,15 @@ public class ShopManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //warrior.onClick.AddListener(ChangeToWarrior);
-        //tank.onClick.AddListener(ChangeToTank);
         start.onClick.AddListener(StartBattle);
         ally_prefabs = gameManager.FindPrefabs("Assets/Prefabs/Entities/Allies");
         CreateButtons(ally_prefabs);
+        gameManager.SetGameActive(false);
+        heal_halo.onClick.AddListener(() => EquipItem("HealHalo"));
+        power_belt.onClick.AddListener(() => EquipItem("PowerBelt"));
+        poison_vial.onClick.AddListener(() => EquipItem("PoisonVial"));
+        revenge_mask.onClick.AddListener(() => EquipItem("RevengeMask"));
+        resurrection_earring.onClick.AddListener(() => EquipItem("ResurrectionEarring"));
     }
 
     // Update is called once per frame
@@ -126,21 +130,21 @@ public class ShopManager : MonoBehaviour
     {
         switch (item)
         {
-            case "HealGloves":
-                heal_gloves.interactable = state;
-                heal_gloves.transform.GetChild(1).gameObject.SetActive(state);
+            case "HealHalo":
+                heal_halo.interactable = state;
+                heal_halo.transform.GetChild(1).gameObject.SetActive(state);
                 break;
-            case "PowerRing":
-                power_ring.interactable = state;
-                power_ring.transform.GetChild(1).gameObject.SetActive(state);
+            case "PowerBelt":
+                power_belt.interactable = state;
+                power_belt.transform.GetChild(1).gameObject.SetActive(state);
                 break;
             case "PoisonVial":
                 poison_vial.interactable = state;
                 poison_vial.transform.GetChild(1).gameObject.SetActive(state);
                 break;
             case "RevengeAmulet":
-                revenge_amulet.interactable = state;
-                revenge_amulet.transform.GetChild(1).gameObject.SetActive(state);
+                revenge_mask.interactable = state;
+                revenge_mask.transform.GetChild(1).gameObject.SetActive(state);
                 break;
             case "ResurrectionEarring":
                 resurrection_earring.interactable = state;

@@ -1415,6 +1415,11 @@ MonoBehaviour:
   shop: {fileID: 5924141582071952576}
   button_prefab: {fileID: 2649371873316736678, guid: bf61d3b80a41adc4c9406ecbbea3b38f, type: 3}
   parent_panel: {fileID: 732982995078122175}
+  heal_halo: {fileID: 3296593339237429953}
+  power_belt: {fileID: 8880770625558756075}
+  poison_vial: {fileID: 5117325146098607847}
+  revenge_mask: {fileID: 2667409934865323817}
+  resurrection_earring: {fileID: 1585373317277773373}
   change_spawn:
     m_PersistentCalls:
       m_Calls:
@@ -1746,7 +1751,7 @@ GameObject:
   - component: {fileID: 8260435076627223550}
   - component: {fileID: 2667409934865323817}
   m_Layer: 5
-  m_Name: RevengeAmulet
+  m_Name: RevengeMask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

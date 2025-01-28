@@ -42,15 +42,15 @@ public class UnitPlacement : MonoBehaviour
         {
             Vector3 mousePosition = Input.mousePosition;
             Ray ray = _UIcamera.ScreenPointToRay(mousePosition);
-            if (shopManager.GetSelectedEntity() != null)
-            {
-                if (!Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerUI))
-                {
-                    shopManager.DeselectEntity();
-                }
-            }
-            else
-            {
+            //if (shopManager.GetSelectedEntity() != null)
+            //{
+            //    if (!Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerUI))
+            //    {
+            //        shopManager.DeselectEntity();
+            //    }
+            //}
+            //else
+            //{
                 if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerPlacement))
                 {
                     Vector3 point = hit.point;
@@ -68,13 +68,20 @@ public class UnitPlacement : MonoBehaviour
                         }
                     }
                 }
-            }
+            //}
         }
 
         if (Input.GetMouseButtonDown(1))
         {
             Vector3 mousePosition = Input.mousePosition;
             Ray ray = _camera.ScreenPointToRay(mousePosition);
+            if (shopManager.GetSelectedEntity() != null)
+            {
+                if (!Physics.Raycast(ray, out _, float.MaxValue, layerUI))
+                {
+                    shopManager.DeselectEntity();
+                }
+            }
             if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerEntity))
             {
                 if (hit.collider != null)
@@ -119,6 +126,7 @@ public class UnitPlacement : MonoBehaviour
         entity_occurences[entity.name.Replace("(Clone)", "")] -= 1;
         gameManager.AddCoins(entity.GetComponent<BasicEntity>().GetCost());
         gameManager.RemoveAlly(entity);
+        entity.GetComponent<EntityBehavior>().SetItemEquipped("");
         Destroy(entity);
     }
 }
