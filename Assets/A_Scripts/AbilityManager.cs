@@ -51,7 +51,7 @@ public class AbilityManager : MonoBehaviour
     }
     private IEnumerator WarriorBoost(BasicEntity attackerEntity) {
         MeshRenderer warriorRenderer = GetComponent<MeshRenderer>();
-        float globalMultiplier = 1f + 0.3f * abilityMultiplier;
+        float globalMultiplier = 1f + 0.2f * abilityMultiplier;
 
         warriorRenderer.material = rageWarriorMaterial;
         attackerEntity.AddAttackMultiplier(globalMultiplier);
@@ -103,7 +103,9 @@ public class AbilityManager : MonoBehaviour
         if (nbSummons == 3) {
             return false;
         }
-        for (int i=nbSummons; i<3; i++) {
+        int x = Math.Min(3, nbSummons+2);
+        Debug.Log(x);
+        for (int i=nbSummons; i<x; i++) {
             GameObject summonned = Instantiate(summonPrefab, transform.position, new Quaternion());
             AddSummonnedInstance(summonned);
             summonned.GetComponent<Summoned>().Init(this);
