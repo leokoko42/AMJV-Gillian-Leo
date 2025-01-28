@@ -1,11 +1,21 @@
+using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 public class AbilityManager : MonoBehaviour
 {
     [SerializeField] private Material normalWarriorMaterial, rageWarriorMaterial;
+    [SerializeField] private GameObject archerAbilityBullet;
+    private EntityBehavior attackEntityBehavior;
+    private BasicEntity attackerEntity;
+    private LayerMask entityLayerMask;
     public float abilityMultiplier = 1f;
+    private void Start() {
+        entityLayerMask = LayerMask.GetMask("Entity");
+        attackEntityBehavior = GetComponent<EntityBehavior>();
+        attackerEntity = GetComponent<BasicEntity>();
+    }
     public bool ActivateAbility(bool abilityAvailable, EntityBehavior.Ability ability, GameObject attacker, GameObject target, bool isTargetInRange) {
-        
         if (!abilityAvailable) {return false;}
 
         switch (ability) {
@@ -31,33 +41,55 @@ public class AbilityManager : MonoBehaviour
     }
 
     private bool WarriorAbility(GameObject attacker) {
-        BasicEntity attackerEntity = attacker.GetComponent<BasicEntity>();
         StartCoroutine(WarriorBoost(attackerEntity));
         return true;
     }
     private IEnumerator WarriorBoost(BasicEntity attackerEntity) {
         MeshRenderer warriorRenderer = GetComponent<MeshRenderer>();
-
         float globalMultiplier = 1f + 0.3f * abilityMultiplier;
 
         warriorRenderer.material = rageWarriorMaterial;
         attackerEntity.AddAttackMultiplier(globalMultiplier);
         attackerEntity.AddSpeedMultiplier(globalMultiplier);
         attackerEntity.AddCooldownMultiplier(1f/globalMultiplier);
-        Debug.Log("StartBuff");
         yield return new WaitForSeconds(6);
         warriorRenderer.material = normalWarriorMaterial;
         attackerEntity.RemoveAttackMultiplier(globalMultiplier);
         attackerEntity.RemoveSpeedMultiplier(globalMultiplier);
         attackerEntity.RemoveCooldownMultiplier(1/globalMultiplier);
-        Debug.Log("EndBuff");
     }
 
     public bool TankAbility(GameObject attacker) {
+        int i=0;
+        bool attackerEnemy = attackerEntity.GetIsEnemy();
+        Vector3 delta = new Vector3(0, 1, 0);
+        Collider[] colliders = Physics.OverlapCapsule(attacker.transform.position - delta, attacker.transform.position + delta, 4f, entityLayerMask);
+        foreach (Collider collider in colliders) {
+            if (attacker.tag == collider.gameObject.tag) {
+                i++;
+                BasicEntity targetEntity = collider.GetComponent<BasicEntity>();
+                StartCoroutine(TankBoost(targetEntity));
+            }
+            if (i==4) {
+                return true;
+            }
+        }
         return true;
+    }
+    private IEnumerator TankBoost(BasicEntity targetedEntity) {
+        targetedEntity.SetDef(targetedEntity.GetDef() + 5 * abilityMultiplier);
+        yield return new WaitForSeconds(6);
+        targetedEntity.SetDef(targetedEntity.GetDef() - 5 * abilityMultiplier);
     }
 
     public bool HealerAbility(GameObject attacker) {
+        Vector3 delta = new Vector3(0, 1, 0);
+        Collider[] colliders = Physics.OverlapCapsule(attacker.transform.position - delta, attacker.transform.position + delta, 6f, entityLayerMask);
+        foreach (Collider collider in colliders) {
+            if (attacker.tag == collider.gameObject.tag) {
+                collider.GetComponent<HealthManager>().Heal(30 * abilityMultiplier);
+            }
+        }
         return true;
     }
 
@@ -66,18 +98,50 @@ public class AbilityManager : MonoBehaviour
     }
     
     public bool MonkAbility(GameObject attacker) {
+        StartCoroutine(MonkBoost(attackerEntity));
         return true;
+    }
+    private IEnumerator MonkBoost(BasicEntity monkEntity) {
+        float totalUpgrade = 10f * abilityMultiplier;
+        monkEntity.AddCooldownMultiplier(1/totalUpgrade);
+        StopCoroutine(attackEntityBehavior.AttackCooldown());
+        yield return new WaitForSeconds(1);
+        monkEntity.RemoveCooldownMultiplier(1/totalUpgrade);
     }
 
     private bool ArcherAbility(GameObject attacker, GameObject target, bool isEnemyInRange) {
         if (!isEnemyInRange) {
             return false;
         }
+        else {
+            float attack = attackerEntity.GetAttack() * attackerEntity.GetAttackMultiplier() * abilityMultiplier;
+            StartCoroutine(ArcherAbilityBullets(attacker,target,attack));
+        }
         return true;
+    }
+    private IEnumerator ArcherAbilityBullets(GameObject attacker, GameObject target, float attack) {
+        for (int i=0; i<7; i++) {
+            Vector3 center = target.transform.position;
+            float theta = UnityEngine.Random.value * Mathf.PI;
+            float r = UnityEngine.Random.value * 2;
+            float y = UnityEngine.Random.value;
+            Vector3 delta = (new Vector3(r*Mathf.Cos(theta), 10+y, r*Mathf.Sin(theta)));
+            GameObject bullet = Instantiate(archerAbilityBullet, center+delta, new Quaternion(90,0,0,0));
+            bullet.GetComponent<BulletMovment>().Init(attack, attacker);
+            yield return new WaitForSeconds(0.2f);
+        }
     }
     public bool HammerAbility(GameObject attacker, GameObject target, bool isEnemyInRange) {
         if (!isEnemyInRange) {
             return false;
+        }
+        Vector3 delta = new Vector3(0, 1, 0);
+        Collider[] colliders = Physics.OverlapCapsule(attacker.transform.position - delta, attacker.transform.position + delta, 6f, entityLayerMask);
+        foreach (Collider collider in colliders) {
+            if (attacker.tag != collider.gameObject.tag) {
+                collider.GetComponent<HealthManager>().Damage(25 * attackerEntity.GetAttackMultiplier() * abilityMultiplier);
+                collider.GetComponent<EntityBehavior>().ApplyKnockback(transform.position, 3, 10 * abilityMultiplier);
+            }
         }
         return true;
     }

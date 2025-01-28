@@ -237,10 +237,10 @@ public class EntityBehavior : MonoBehaviour
 
             if (!isOnCooldown && allyAbility.ActivateAbility(abilityAvailable, ability, gameObject, targetOponent, targetInRange)) {
                     allyEntity.SetMana(0);
+                    StartCoroutine(AttackCooldown());
                 }
             else if (!isOnCooldown && targetInRange) {
                 allyNavMeshAgent.enabled = false;
-                //MoveToGameObject(gameObject); //Maybe use a better alternative to stop the movement ?
                 AttackOther(targetOponent, range);
             }
             else {
@@ -259,7 +259,6 @@ public class EntityBehavior : MonoBehaviour
 
     private void AttackOther(GameObject oponent, float range) {
         float attack = allyEntity.GetAttack() * allyEntity.GetAttackMultiplier();
-        float attackSpeed = allyEntity.GetAttackSpeed() * allyEntity.GetCooldownMultiplier();
 
         if (range>5) { //Add a bool variable to ensure if an entity is ranged or not ?
             RangedAttack(oponent, attack);
@@ -267,7 +266,7 @@ public class EntityBehavior : MonoBehaviour
         else {
             MeleeAttack(oponent, attack);
         }
-        StartCoroutine(AttackCooldown(attackSpeed));
+        StartCoroutine(AttackCooldown());
     }
 
     private void RangedAttack(GameObject oponent, float attack) {
@@ -285,24 +284,22 @@ public class EntityBehavior : MonoBehaviour
     }
 
     //Differents corroutines
-    IEnumerator AttackCooldown(float cooldown)
+    public IEnumerator AttackCooldown()
     {
+        float attackSpeed = allyEntity.GetAttackSpeed() * allyEntity.GetCooldownMultiplier();
         isOnCooldown = true;
-        yield return new WaitForSeconds(cooldown);
+        yield return new WaitForSeconds(attackSpeed);
         isOnCooldown = false;
     }
 
-    public void ApplyKnockback(Vector3 origin, float stunCooldown) {
-        StartCoroutine(Knockback(origin, stunCooldown));
+    public void ApplyKnockback(Vector3 origin, float stunCooldown, float strenght) {
+        StartCoroutine(Knockback(origin, stunCooldown, strenght));
     }
 
-    IEnumerator Knockback(Vector3 origin, float stunCooldown) {
+    IEnumerator Knockback(Vector3 origin, float stunCooldown, float strenght) {
         StartCoroutine(StunnedForSeconds(stunCooldown));
-        /*while (allyNavMeshAgent.enabled) {
-            yield return new WaitForSeconds(0.1f);
-        }*/
         yield  return new WaitForSeconds(0f);
-        GetComponent<Rigidbody>().AddExplosionForce(200, new Vector3(origin.x, origin.y-0.5f, origin.z) , 10, 10);
+        GetComponent<Rigidbody>().AddExplosionForce(40 * strenght, origin , 10, strenght/5);
     }
     IEnumerator StunnedForSeconds(float cooldown) {
         stunned = true;

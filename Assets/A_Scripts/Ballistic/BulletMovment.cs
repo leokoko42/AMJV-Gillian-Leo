@@ -5,46 +5,49 @@ using UnityEngine.Assertions.Must;
 
 public class BulletMovment : MonoBehaviour
 {
-    public GameObject target, summoner;
+    [SerializeField] private bool isAimed;
+    private GameObject target, summoner;
     private float g, y_0, x, z, bulletSpeed, attack;
     private Rigidbody bulletRigidbody;
     private bool lauch, autoAim;
     [SerializeField] private float theta = 20f;
     
+    public void Init(float new_attack,GameObject new_summoner) {
+        summoner = new_summoner;
+        attack = new_attack;
+    }
     public void Init(float new_attack, GameObject new_target, GameObject new_summoner) {
         target = new_target;
         summoner = new_summoner;
         attack = new_attack;
     }
-
-    public void Update() {
-
-    }
     public void FixedUpdate() {
         if (autoAim) {
             AutoAim();
         }
-        if (lauch) {
+        if (isAimed) {
             if (bulletRigidbody.linearVelocity.y<0) {
                 autoAim = true;
             }
             transform.LookAt(transform.position + bulletRigidbody.linearVelocity);
+        }
+        else {
+            transform.eulerAngles = new Vector3(90,0,0);
         }
     }
 
     void Start()
     {
         autoAim = false;
-        lauch = false;
         bulletRigidbody = GetComponent<Rigidbody>();
         g = 9.8f;
-        LaunchBullet();
+        if(isAimed) {
+            LaunchBullet();
+        }
     }
-
 
     public void LaunchBullet()
     {
-        lauch = true;
         autoAim = false;
         
         Vector3 delta = target.transform.position - transform.position;
@@ -79,9 +82,22 @@ public class BulletMovment : MonoBehaviour
     }
 
     public void OnTriggerEnter(Collider collider) {
-        if (collider.gameObject == target) {
-            HealthManager targetHealth = target.GetComponent<HealthManager>();
-            targetHealth.Damage(attack);
+        string colliderTag = collider.gameObject.tag;
+        if (isAimed) {
+            if (collider.gameObject == target) {
+                HealthManager targetHealth = target.GetComponent<HealthManager>();
+                targetHealth.Damage(attack);
+                Destroy(gameObject);
+            }
+        }
+        else {
+            if (summoner.tag != colliderTag && (colliderTag == "Allies" || colliderTag == "Enemies")) {
+                HealthManager targetHealth = collider.GetComponent<HealthManager>();
+                targetHealth.Damage(attack);
+                Destroy(gameObject);
+            }
+        }
+        if (colliderTag == "Obstacle" || colliderTag == "Ground") {
             Destroy(gameObject);
         }
     }
