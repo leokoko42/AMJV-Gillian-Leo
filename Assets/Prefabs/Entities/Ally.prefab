@@ -17229,10 +17229,6 @@ MonoBehaviour:
   cost: 0
   range: 0
   manaRegen: 0
-  attackMultiplier: []
-  defMultiplier: []
-  speedMultiplier: []
-  cooldownMultiplier: []
 --- !u!114 &1987572297502440785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17245,9 +17241,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a68d3123513b9b41ba5869200ca6b8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalWarriorMaterial: {fileID: 2100000, guid: ee1ede9fd1d539e4e98b93a13898697c, type: 2}
-  rageWarriorMaterial: {fileID: 2100000, guid: 5915e041f42f045438be5124f4024e79, type: 2}
-  archerAbilityBullet: {fileID: 9135044066171264931, guid: 41113badc51de8d449aa827c9d3cfe0f, type: 3}
+  normalWarriorMaterial: {fileID: 0}
+  rageWarriorMaterial: {fileID: 0}
+  archerAbilityBullet: {fileID: 0}
+  summonPrefab: {fileID: 0}
   abilityMultiplier: 1
 --- !u!54 &-4729630872209467906
 Rigidbody:

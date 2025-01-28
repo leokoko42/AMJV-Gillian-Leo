@@ -69,12 +69,12 @@ public class EntityBehavior : MonoBehaviour
 
         touchingGround = true;
         stunned = false;
-
+        crown.SetActive(false);
+        
         game_manager = GameObject.Find("GameManager").GetComponent<GameManager>();
         unit_placement = GameObject.Find("PlacementManager").GetComponent<UnitPlacement>();
 
         //crown = GameObject.Find("Crown");
-        crown.SetActive(false);
         //health_bar = GameObject.Find("HealthBar");
         //mana_bar = GameObject.Find("ManaBar");
         //behavior_menu = GameObject.Find("BehaviorMenu");
@@ -335,12 +335,6 @@ public class EntityBehavior : MonoBehaviour
 
         //Fire
     private bool isOnFire = false;
-    private void Update() {
-        if (Input.GetKeyDown("space")) {
-            Debug.Log("FIRE");
-            ApplyPoison(10);
-        }
-    }
     public void ApplyFire(float time) {
         if (isOnFire) {
             StopCoroutine(FireForSeconds(time));
@@ -362,7 +356,6 @@ public class EntityBehavior : MonoBehaviour
         HealthManager allyHealth = GetComponent<HealthManager>();
         while(isOnFire) {
             allyHealth.TrueDamage(allyEntity.GetMaxHP()/100);
-            Debug.Log(allyEntity.GetMaxHP()/100);
             yield return new WaitForSeconds(1);
         }
     }

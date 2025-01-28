@@ -215,8 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6cb714daaef4f142bd88839562c7891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  summoner: {fileID: 0}
+  isAimed: 1
   theta: 20
 --- !u!1 &6773548094782665089
 GameObject:

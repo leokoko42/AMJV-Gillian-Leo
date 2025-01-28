@@ -1,14 +1,17 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 public class AbilityManager : MonoBehaviour
 {
     [SerializeField] private Material normalWarriorMaterial, rageWarriorMaterial;
     [SerializeField] private GameObject archerAbilityBullet;
+    [SerializeField] private GameObject summonPrefab;
     private EntityBehavior attackEntityBehavior;
     private BasicEntity attackerEntity;
     private LayerMask entityLayerMask;
+    public List<GameObject> summonnedEntitiesList;
     public float abilityMultiplier = 1f;
     private void Start() {
         entityLayerMask = LayerMask.GetMask("Entity");
@@ -95,8 +98,27 @@ public class AbilityManager : MonoBehaviour
         return true;
     }
 
+    private int nbSummons = 0;
     public bool SummonerAbility(GameObject attacker) {
+        if (nbSummons == 3) {
+            return false;
+        }
+        for (int i=nbSummons; i<3; i++) {
+            GameObject summonned = Instantiate(summonPrefab, transform.position, new Quaternion());
+            AddSummonnedInstance(summonned);
+            summonned.GetComponent<Summoned>().Init(this);
+        }
         return true;
+    }
+
+    public void AddSummonnedInstance(GameObject summonned) {
+        summonnedEntitiesList.Add(summonned);
+        nbSummons++;
+    }
+
+    public void RemoveSummonnedInstance(GameObject summonned) {
+        summonnedEntitiesList.Remove(summonned);
+        nbSummons--;
     }
     
     public bool MonkAbility(GameObject attacker) {
@@ -151,6 +173,27 @@ public class AbilityManager : MonoBehaviour
     public bool ShamanAbility(GameObject attacker, GameObject target, bool isEnemyInRange) {
         if (!isEnemyInRange) {
             return false;
+        }
+        Vector3 delta = new Vector3(0, 1, 0);
+        Collider[] colliders = Physics.OverlapCapsule(attacker.transform.position - delta, attacker.transform.position + delta, 6f, entityLayerMask);
+        foreach (Collider collider in colliders) {
+            if (attacker.tag != collider.gameObject.tag) {
+                EntityBehavior targetBehavior = collider.GetComponent<EntityBehavior>();
+                int randomStatus = UnityEngine.Random.Range(0,3);
+                switch (randomStatus) {
+                    case 0:
+                        targetBehavior.ApplyFire(8 * abilityMultiplier);
+                        break;
+                    case 1:
+                        targetBehavior.ApplyPoison(8 * abilityMultiplier);
+                        break;
+                    case 2:
+                        targetBehavior.ApplyIce(8 * abilityMultiplier);
+                        break;
+                    default:
+                        throw new Exception("Wrong Status effect from Shaman");
+                }
+            }
         }
         return true;
     }
