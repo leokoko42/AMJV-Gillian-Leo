@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LayerMask layerEntity;
     private GameObject selected_entity;
 
+    [SerializeField] private ShopManager shopManager;
     [SerializeField] private DataHolder data;
 
     private bool shop_active;
@@ -176,27 +177,41 @@ public class GameManager : MonoBehaviour
 
     public GameObject[] FindPrefabs(string folderPath)
     {
+        // Old Code : Works only in Editor
+        //// Get all asset paths in the specified folder
+        //string[] assetPaths = AssetDatabase.FindAssets("t:Prefab", new[] { folderPath });
 
-        // Get all asset paths in the specified folder
-        string[] assetPaths = AssetDatabase.FindAssets("t:Prefab", new[] { folderPath });
+        //// List to store the loaded prefabs
+        //List<GameObject> prefabs = new List<GameObject>();
 
-        // List to store the loaded prefabs
-        List<GameObject> prefabs = new List<GameObject>();
+        //foreach (string guid in assetPaths)
+        //{
+        //    // Get the full path to the asset
+        //    string assetPath = AssetDatabase.GUIDToAssetPath(guid);
 
-        foreach (string guid in assetPaths)
+        //    // Load the prefab and add it to the list
+        //    GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+        //    if (prefab != null)
+        //    {
+        //        prefabs.Add(prefab);
+        //    }
+        //}
+        //return prefabs.ToArray();
+
+        Object[] prefabs = Resources.LoadAll(folderPath, typeof(GameObject));
+
+        if (prefabs.Length == 0)
         {
-            // Get the full path to the asset
-            string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-
-            // Load the prefab and add it to the list
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
-            if (prefab != null)
-            {
-                prefabs.Add(prefab);
-            }
+            Debug.LogWarning($"No prefabs found in Resources/{folderPath}");
         }
 
-        return prefabs.ToArray();
+        List<GameObject> list = new List<GameObject>();
+        foreach (Object obj in prefabs)
+        {
+            GameObject go = (GameObject)obj;
+            list.Add(go);
+        }
+        return list.ToArray();
     }
 
     public bool GetShopActive()
@@ -218,6 +233,7 @@ public class GameManager : MonoBehaviour
     {
         game_active = b;
         uiButtons.SetActive(b);
+        gameUI.SetActive(b);
     }
 
     public int GetCoinsOnWin() { return coins_on_win; }
@@ -242,5 +258,10 @@ public class GameManager : MonoBehaviour
     void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void EntityDied()
+    {
+        shopManager.revenge_mask_wielder.GetComponent<EntityBehavior>().UpdateRevengeMultiplier();
     }
 }

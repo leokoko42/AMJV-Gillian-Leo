@@ -479,7 +479,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Heal
 
-    Gloves'
+    Halo'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1185,7 +1185,7 @@ GameObject:
   - component: {fileID: 6830558404307884773}
   - component: {fileID: 3296593339237429953}
   m_Layer: 5
-  m_Name: HealGloves
+  m_Name: HealHalo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1415,6 +1415,16 @@ MonoBehaviour:
   shop: {fileID: 5924141582071952576}
   button_prefab: {fileID: 2649371873316736678, guid: bf61d3b80a41adc4c9406ecbbea3b38f, type: 3}
   parent_panel: {fileID: 732982995078122175}
+  heal_halo: {fileID: 3296593339237429953}
+  power_belt: {fileID: 8880770625558756075}
+  poison_vial: {fileID: 5117325146098607847}
+  revenge_mask: {fileID: 2667409934865323817}
+  resurrection_earring: {fileID: 1585373317277773373}
+  heal_halo_wielder: {fileID: 0}
+  power_belt_wielder: {fileID: 0}
+  poison_vial_wielder: {fileID: 0}
+  revenge_mask_wielder: {fileID: 0}
+  resurrection_earring_wielder: {fileID: 0}
   change_spawn:
     m_PersistentCalls:
       m_Calls:
@@ -1746,7 +1756,7 @@ GameObject:
   - component: {fileID: 8260435076627223550}
   - component: {fileID: 2667409934865323817}
   m_Layer: 5
-  m_Name: RevengeAmulet
+  m_Name: RevengeMask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2279,7 +2289,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Revenge
 
-    Amulet'
+    Mask'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2363,7 +2373,7 @@ GameObject:
   - component: {fileID: 59186722578492686}
   - component: {fileID: 8880770625558756075}
   m_Layer: 5
-  m_Name: PowerRing
+  m_Name: PowerBelt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2620,7 +2630,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Ring of
+  m_text: 'Belt of
 
     Power'
   m_isRightToLeft: 0
@@ -2900,6 +2910,10 @@ PrefabInstance:
       propertyPath: coin_text
       value: 
       objectReference: {fileID: 899625830882437639}
+    - target: {fileID: 5681319800031397463, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
+      propertyPath: shopManager
+      value: 
+      objectReference: {fileID: 4225937638507217269}
     - target: {fileID: 5681319800031397463, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
       propertyPath: victoryScreen
       value: 

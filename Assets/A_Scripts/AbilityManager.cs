@@ -37,9 +37,11 @@ public class AbilityManager : MonoBehaviour
                 return SummonerAbility(attacker);
             case EntityBehavior.Ability.Monk:
                 return MonkAbility(attacker);
+            default:
+                return false;
         }
 
-        return false;
+        
     }
 
     private bool WarriorAbility(GameObject attacker) {

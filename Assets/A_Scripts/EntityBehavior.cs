@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,6 +9,8 @@ using UnityEngine.Analytics;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using static UnityEditor.Progress;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class EntityBehavior : MonoBehaviour
 {
@@ -36,7 +39,18 @@ public class EntityBehavior : MonoBehaviour
     public UnityEvent show_menu, hide_menu;
     [SerializeField] private GameObject left_eye, right_eye;
     [SerializeField] private Material offense_mat, neutral_mat, defense_mat;
+
+    [SerializeField] private GameObject heal_halo;
+    [SerializeField] private GameObject power_belt;
+    [SerializeField] private GameObject poison_vial;
+    [SerializeField] private GameObject revenge_mask;
+    [SerializeField] private GameObject resurrection_earring;
+
     private string item_equipped;
+    private GameObject item_visual;
+
+    private int allies_on_start;
+    private float revenge_mult;
     [SerializeField] ParticleSystem fireParticles, iceParticles, poisonParticles;
     private float initialDef;
 
@@ -75,9 +89,11 @@ public class EntityBehavior : MonoBehaviour
         total_abilities_used = 0;
         total_health_recovered = 0;
 
+
         UpdateGroundAreaType();
         RefreshEntitiesLists();
 
+        revenge_mult = 1f;
         initialDef = allyEntity.GetDef();
         fireParticles.Stop();
         iceParticles.Stop();
@@ -233,9 +249,11 @@ public class EntityBehavior : MonoBehaviour
             bool abilityAvailable = (allyEntity.GetMana() == allyEntity.GetMaxMana());
 
             if (!isOnCooldown && allyAbility.ActivateAbility(abilityAvailable, ability, gameObject, targetOponent, targetInRange)) {
-                    allyEntity.SetMana(0);
-                    StartCoroutine(AttackCooldown());
-                }
+                if (item_equipped == "HealHalo") 
+                    gameObject.GetComponent<HealthManager>().Heal(allyEntity.GetMaxHP() * DataHolder.GetHaloHealPercentage());
+                allyEntity.SetMana(0);
+                StartCoroutine(AttackCooldown());
+            }
             else if (!isOnCooldown && targetInRange) {
                 allyNavMeshAgent.enabled = false;
                 AttackOther(targetOponent, range);
@@ -376,22 +394,22 @@ public class EntityBehavior : MonoBehaviour
     {
         crown.SetActive(true);
         Vector3 hb_pos = health_bar.transform.position;
-        health_bar.transform.position = new Vector3(hb_pos.x, hb_pos.y+25, hb_pos.z);
+        health_bar.transform.position = new Vector3(hb_pos.x, hb_pos.y + 0.25f, hb_pos.z);
         Vector3 mb_pos = mana_bar.transform.position;
-        mana_bar.transform.position = new Vector3(mb_pos.x, mb_pos.y + 25, mb_pos.z);
+        mana_bar.transform.position = new Vector3(mb_pos.x, mb_pos.y + 0.25f, mb_pos.z);
         Vector3 bm_pos = behavior_menu.transform.position;
-        behavior_menu.transform.position = new Vector3(mb_pos.x, mb_pos.y + 25, mb_pos.z);
+        behavior_menu.transform.position = new Vector3(mb_pos.x, mb_pos.y + 0.25f, mb_pos.z);
     }
 
     public void RemoveCrown()
     {
         crown.SetActive(false);
         Vector3 hb_pos = health_bar.transform.position;
-        health_bar.transform.position = new Vector3(hb_pos.x, hb_pos.y - 25, hb_pos.z);
+        health_bar.transform.position = new Vector3(hb_pos.x, hb_pos.y - 0.25f, hb_pos.z);
         Vector3 mb_pos = mana_bar.transform.position;
-        mana_bar.transform.position = new Vector3(mb_pos.x, mb_pos.y - 25, mb_pos.z);
+        mana_bar.transform.position = new Vector3(mb_pos.x, mb_pos.y - 0.25f, mb_pos.z);
         Vector3 bm_pos = behavior_menu.transform.position;
-        behavior_menu.transform.position = new Vector3(mb_pos.x, mb_pos.y - 25, mb_pos.z);
+        behavior_menu.transform.position = new Vector3(mb_pos.x, mb_pos.y - 0.25f, mb_pos.z);
     }
 
     public void ChangeDamageDealt(float dmg)
@@ -465,10 +483,82 @@ public class EntityBehavior : MonoBehaviour
     }
 
     public void SetItemEquipped(string item) 
-    { 
+    {
+        if (item_visual != null)
+        {
+            Destroy(item_visual);
+        }
         item_equipped = item;
+        switch (item)
+        {
+            case "HealHalo":
+                item_visual = Instantiate(heal_halo, transform.position, transform.rotation, transform);
+                break;
+            case "PowerBelt":
+                item_visual = Instantiate(power_belt, transform.position, transform.rotation, transform);
+                gameObject.GetComponent<AbilityManager>().abilityMultiplier *= DataHolder.GetBeltAbilityMult();
+                break;
+            case "PoisonVial":
+                item_visual = Instantiate(poison_vial, transform.position, transform.rotation, transform);
+                break;
+            case "RevengeMask":
+                item_visual = Instantiate(revenge_mask, transform.position, transform.rotation, transform);
+                break;
+            case "ResurrectionEarring":
+                item_visual = Instantiate(resurrection_earring, transform.position, transform.rotation, transform);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void UnequipItem()
+    {
+        switch (item_equipped)
+        {
+            case "PowerBelt":
+                gameObject.GetComponent<AbilityManager>().abilityMultiplier /= DataHolder.GetBeltAbilityMult();
+                break;
+            case "PoisonVial":
+                break;
+            case "RevengeMask":
+                break;
+            default:
+                break;
+        }
+        if (item_equipped != "")
+        {
+            item_equipped = "";
+            Destroy(item_visual);
+        }
     }
 
     public string GetItemEquipped() {  return item_equipped; }
+
+    public void SetAlliesOnStart(int allies) { allies_on_start = allies; }
+    public int GetAlliesOnStart() { return allies_on_start; }
+
+    public void Dies()
+    {
+        game_manager.EntityDied();
+    }
+
+    public void UpdateRevengeMultiplier()
+    {
+        Debug.Log("URM");
+        if (item_equipped == "RevengeMask")
+        {
+            Debug.Log("correct item");
+            allyEntity.RemoveAttackMultiplier(revenge_mult);
+            allyEntity.RemoveDefMultiplier(revenge_mult);
+            allyAbility.abilityMultiplier /= (revenge_mult / 2f + 0.5f);
+            revenge_mult = 1f + DataHolder.GetMaskRevengeBoost() * Mathf.Max(allies_on_start - game_manager.ally_list.Count, 0);
+            allyEntity.AddAttackMultiplier(revenge_mult);
+            allyEntity.AddDefMultiplier(revenge_mult);
+            allyAbility.abilityMultiplier *= (revenge_mult / 2f + 0.5f);
+
+            Debug.Log("URM no crash :)");
+        }
+    }
 
 }

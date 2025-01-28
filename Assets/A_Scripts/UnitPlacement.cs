@@ -24,7 +24,7 @@ public class UnitPlacement : MonoBehaviour
     void Start()
     {
         to_spawn_object = null;
-        GameObject[] ally_prefabs = gameManager.FindPrefabs("Assets/Prefabs/Entities/Allies");
+        GameObject[] ally_prefabs = gameManager.FindPrefabs("AllyEntities");
         entity_occurences = new Dictionary<string, int>();
         gameManager.entity_max_occurences = new Dictionary<string, int>();
         for (int i = 0; i < ally_prefabs.Length; i++)
@@ -41,15 +41,15 @@ public class UnitPlacement : MonoBehaviour
         {
             Vector3 mousePosition = Input.mousePosition;
             Ray ray = _UIcamera.ScreenPointToRay(mousePosition);
-            if (shopManager.GetSelectedEntity() != null)
-            {
-                if (!Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerUI))
-                {
-                    shopManager.DeselectEntity();
-                }
-            }
-            else
-            {
+            //if (shopManager.GetSelectedEntity() != null)
+            //{
+            //    if (!Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerUI))
+            //    {
+            //        shopManager.DeselectEntity();
+            //    }
+            //}
+            //else
+            //{
                 if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerPlacement))
                 {
                     Vector3 point = hit.point;
@@ -67,13 +67,20 @@ public class UnitPlacement : MonoBehaviour
                         }
                     }
                 }
-            }
+            //}
         }
 
         if (Input.GetMouseButtonDown(1))
         {
             Vector3 mousePosition = Input.mousePosition;
             Ray ray = _camera.ScreenPointToRay(mousePosition);
+            if (shopManager.GetSelectedEntity() != null)
+            {
+                if (!Physics.Raycast(ray, out _, float.MaxValue, layerUI))
+                {
+                    shopManager.DeselectEntity();
+                }
+            }
             if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerEntity))
             {
                 if (hit.collider != null)
@@ -118,6 +125,7 @@ public class UnitPlacement : MonoBehaviour
         entity_occurences[entity.name.Replace("(Clone)", "")] -= 1;
         gameManager.AddCoins(entity.GetComponent<BasicEntity>().GetCost());
         gameManager.RemoveAlly(entity);
+        entity.GetComponent<EntityBehavior>().SetItemEquipped("");
         Destroy(entity);
     }
 }
