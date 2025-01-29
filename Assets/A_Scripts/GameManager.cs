@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     private bool game_active;
 
     [SerializeField] private GameObject victoryScreen;
+    [SerializeField] private GameObject defeatScreen;
     [SerializeField] private Button next_level_button;
     [SerializeField] private Button victory_quit_button;
 
@@ -259,8 +260,9 @@ public class GameManager : MonoBehaviour
     private void Defeat() 
     {
         SetGameActive(false);
-        //defeatScreen.SetActive(true);
+        defeatScreen.SetActive(true);
         gameUI.SetActive(false);
+        Time.timeScale = 0f;
     }
 
     private void PauseOrResume()

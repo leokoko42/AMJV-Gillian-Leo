@@ -8,7 +8,6 @@ public class VictoryScreen : MonoBehaviour
 {
     [SerializeField] private Button nextButton;
     [SerializeField] private Button quitButton;
-    [SerializeField] private GameManager gameManager;
     [SerializeField] private TMP_Text coinsGained;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

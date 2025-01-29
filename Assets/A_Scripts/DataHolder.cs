@@ -23,6 +23,7 @@ public class DataHolder : MonoBehaviour
 
         coins = 100;
         start_time = Time.time;
+        retries = 3;
 
         earring_reduction_factor = 3f;
         belt_ability_mult = 1.25f;
