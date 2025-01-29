@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
         GameObject[] ally_array = GameObject.FindGameObjectsWithTag("Allies");
         enemy_list = new List<GameObject>(enemy_array);
         ally_list = new List<GameObject>(ally_array);
+        coin_text.text = DataHolder.GetCoins().ToString();
 
         stats_panel.SetActive(false);
 
@@ -253,7 +254,6 @@ public class GameManager : MonoBehaviour
         SetGameActive(false);
         victoryScreen.SetActive(true);
         gameUI.SetActive(false);
-        DataHolder.SetCoins(DataHolder.GetCoins() + DataHolder.GetCoinsPerRound());
         Time.timeScale = 0f;
     }
 

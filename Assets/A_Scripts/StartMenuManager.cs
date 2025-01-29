@@ -45,6 +45,8 @@ public class StartMenuManager : MonoBehaviour
     }
     void StartGame()
     {
+        DataHolder.SetCoins(DataHolder.GetCoins() + DataHolder.GetCoinsPerRound());
+        DataHolder.SetCoinsAtRoundStart(DataHolder.GetCoins());
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
@@ -53,13 +55,13 @@ public class StartMenuManager : MonoBehaviour
         switch (diff)
         {
             case "Easy":
-                DataHolder.SetCoinsPerRound(200);
+                DataHolder.SetCoinsPerRound(250);
                 break;
             case "Normal":
-                DataHolder.SetCoinsPerRound(150);
+                DataHolder.SetCoinsPerRound(200);
                 break;
             case "Hard":
-                DataHolder.SetCoinsPerRound(100);
+                DataHolder.SetCoinsPerRound(150);
                 break;
             default:
                 break;

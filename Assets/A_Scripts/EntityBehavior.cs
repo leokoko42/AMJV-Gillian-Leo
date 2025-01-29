@@ -81,10 +81,7 @@ public class EntityBehavior : MonoBehaviour
             crown.SetActive(false);
         }
 
-        //crown = GameObject.Find("Crown");
-        //health_bar = GameObject.Find("HealthBar");
-        //mana_bar = GameObject.Find("ManaBar");
-        //behavior_menu = GameObject.Find("BehaviorMenu");
+        UpdateEyes();
 
         item_equipped = "";
 
@@ -466,22 +463,40 @@ public class EntityBehavior : MonoBehaviour
     public void OffenseBehavior()
     {
         basicEntity.SetBehavior(Entity.Behavior.Offense);
-        left_eye.GetComponent<MeshRenderer>().material = offense_mat;
-        right_eye.GetComponent<MeshRenderer>().material = offense_mat;
+        UpdateEyes();
     }
 
     public void NeutralBehavior()
     {
         basicEntity.SetBehavior(Entity.Behavior.Neutral);
-        left_eye.GetComponent<MeshRenderer>().material = neutral_mat;
-        right_eye.GetComponent<MeshRenderer>().material = neutral_mat;
+        UpdateEyes();
     }
 
     public void DefenseBehavior()
     {
         basicEntity.SetBehavior(Entity.Behavior.Defense);
-        left_eye.GetComponent<MeshRenderer>().material = defense_mat;
-        right_eye.GetComponent<MeshRenderer>().material = defense_mat;
+        UpdateEyes();
+    }
+
+    public void UpdateEyes()
+    {
+        Material m = neutral_mat;
+        switch (basicEntity.GetBehavior())
+        {
+            case Entity.Behavior.Defense:
+                m = defense_mat;
+                break;
+            case Entity.Behavior.Neutral:
+                m = neutral_mat;
+                break;
+            case Entity.Behavior.Offense:
+                m = offense_mat;
+                break;
+            default:
+                break;
+        }
+        left_eye.GetComponent<MeshRenderer>().material = m;
+        right_eye.GetComponent<MeshRenderer>().material = m;
     }
 
     public void SetKing()

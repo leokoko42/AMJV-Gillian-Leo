@@ -656,8 +656,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc36b87631777b540bf99f9982eb530f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement_speed: 40
-  rotation_speed: 90
 --- !u!1 &1971844027787156166
 GameObject:
   m_ObjectHideFlags: 0
@@ -938,7 +936,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5245635345138365742}
-  - component: {fileID: 3571590853824157153}
   m_Layer: 0
   m_Name: AllUI
   m_TagString: Untagged
@@ -966,18 +963,6 @@ Transform:
   - {fileID: 3846916626875306483}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3571590853824157153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2657060939526195653}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab20191e9b00503499c525ca5762d58a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2880951534699773708
 GameObject:
   m_ObjectHideFlags: 0
@@ -1158,7 +1143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a51b191d815e564d9b1953c476ad3f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 3571590853824157153}
+  data: {fileID: 0}
   gameManager: {fileID: 1245414215794770038}
   shopManager: {fileID: 4225937638507217269}
   _camera: {fileID: 861242429691247865}
@@ -2786,6 +2771,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5245635345138365742}
     m_Modifications:
+    - target: {fileID: 2685290899410872870, guid: 7a32151760ea4854295e4c63597282a3, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 1245414215794770038}
     - target: {fileID: 4564133954697380067, guid: 7a32151760ea4854295e4c63597282a3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -607.41095
@@ -2971,6 +2960,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0.000061035156
       objectReference: {fileID: 0}
+    - target: {fileID: 2975556738678978732, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2975556738678978732, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 527.679
+      objectReference: {fileID: 0}
     - target: {fileID: 3006171318718325054, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
@@ -3007,10 +3004,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -469.5988
       objectReference: {fileID: 0}
-    - target: {fileID: 5681319800031397463, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
-      propertyPath: data
-      value: 
-      objectReference: {fileID: 3571590853824157153}
     - target: {fileID: 5681319800031397463, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
       propertyPath: gameUI
       value: 
@@ -3050,6 +3043,10 @@ PrefabInstance:
     - target: {fileID: 6923346274649989253, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
       propertyPath: m_Name
       value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960019621371723189, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 523.9016
       objectReference: {fileID: 0}
     - target: {fileID: 7382212077194939957, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
       propertyPath: m_ScreenMatchMode
@@ -3100,8 +3097,12 @@ PrefabInstance:
       value: 58.4248
       objectReference: {fileID: 0}
     - target: {fileID: 8051356200399393378, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8051356200399393378, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 400
+      value: 475.56952
       objectReference: {fileID: 0}
     - target: {fileID: 8650680515095490176, guid: 49144ea622c3ac74697f3f6cd63c29c6, type: 3}
       propertyPath: m_Color.b

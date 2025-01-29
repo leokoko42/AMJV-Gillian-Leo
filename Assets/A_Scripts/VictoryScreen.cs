@@ -9,6 +9,7 @@ public class VictoryScreen : MonoBehaviour
     [SerializeField] private Button nextButton;
     [SerializeField] private Button quitButton;
     [SerializeField] private TMP_Text coinsGained;
+    [SerializeField] private GameManager gameManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -24,7 +25,10 @@ public class VictoryScreen : MonoBehaviour
 
     void NextLevel()
     {
+        DataHolder.SetCoins(DataHolder.GetCoins() + DataHolder.GetCoinsPerRound());
+        DataHolder.SetCoinsAtRoundStart(DataHolder.GetCoins());
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        Time.timeScale = 1.0f;
     }
 
     void QuitGame()

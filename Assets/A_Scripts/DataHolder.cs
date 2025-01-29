@@ -5,8 +5,12 @@ public class DataHolder : MonoBehaviour
 {
     public static DataHolder Instance;
 
+    public static float camera_move_speed;
+    public static float camera_turn_speed;
+
     private static int coins_per_round;
     private static int coins;
+    private static int coins_at_round_start;
     private static float start_time;
     private static int retries;
 
@@ -21,7 +25,10 @@ public class DataHolder : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        coins = 100;
+        camera_move_speed = 40f;
+        camera_turn_speed = 90f;
+
+        coins = 0;
         start_time = Time.time;
         retries = 3;
 
@@ -37,6 +44,9 @@ public class DataHolder : MonoBehaviour
 
     public static int GetCoins() { return coins; }
     public static void SetCoins(int c) { coins = c; }
+
+    public static int GetCoinsAtRoundStart() { return coins_at_round_start; }
+    public static void SetCoinsAtRoundStart(int c) { coins_at_round_start = c; }
 
     public static float GetStartTime() { return start_time; }
 
