@@ -8,6 +8,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Arenas/Arene1.unity
     guid: 03d4a08df75d785488dbc950d6d38f18
+  - enabled: 1
+    path: Assets/Scenes/Arenas/Arene3.unity
+    guid: aa4da3c58869f624faa76b5c6621b229
+  - enabled: 1
+    path: Assets/Scenes/Arenas/Arene2.unity
+    guid: 14491e0838d4f9f46a4d0d4b839cb1e7
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 289c1b55c9541489481df5cc06664110, type: 3}
   m_UseUCBPForAssetBundles: 0
