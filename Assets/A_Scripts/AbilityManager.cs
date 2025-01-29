@@ -180,7 +180,6 @@ public class AbilityManager : MonoBehaviour
         foreach (Collider collider in colliders) {
             if (attacker.tag != collider.gameObject.tag) {
                 EntityBehavior targetBehavior = collider.GetComponent<EntityBehavior>();
-                Debug.Log(targetBehavior);
                 int randomStatus = UnityEngine.Random.Range(0,3);
                 switch (randomStatus) {
                     case 0:

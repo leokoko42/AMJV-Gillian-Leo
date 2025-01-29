@@ -35,7 +35,7 @@ public class BulletMovment : MonoBehaviour
         }
     }
     public void FixedUpdate() {
-        if (!target) {
+        if (!target && autoAim) {
             Debug.Log("target died");
             Destroy(gameObject);
         }
