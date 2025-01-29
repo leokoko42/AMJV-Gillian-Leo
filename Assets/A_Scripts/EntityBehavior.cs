@@ -235,7 +235,6 @@ public class EntityBehavior : MonoBehaviour
             else {
                 enemyKing = game_manager.enemy_king;
             }
-            Debug.Log("FUCK");
         }
             
         float distance = Vector3.Distance(enemyKing.transform.position,transform.position);
