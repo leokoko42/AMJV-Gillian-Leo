@@ -104,6 +104,27 @@ public class GameManager : MonoBehaviour
                 Defeat();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            ToggleInvincibility();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RetryLevel();
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            ExtremeManaRegen();
+        }
+
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            NextScene();
+        }
+
     }
 
     void UpdateStats()
@@ -286,5 +307,35 @@ public class GameManager : MonoBehaviour
     {
         if (shopManager.revenge_mask_wielder !=  null)
             shopManager.revenge_mask_wielder.GetComponent<EntityBehavior>().UpdateRevengeMultiplier();
+    }
+
+    void ToggleInvincibility()
+    {
+        foreach (GameObject ally in ally_list)
+        {
+            BasicEntity be = ally.GetComponent<BasicEntity>();
+            be.SetDef(500f - be.GetTrueDef());
+        }
+    }
+
+    void AddRetries()
+    {
+        DataHolder.SetRetries(DataHolder.GetRetries()+7);
+    }
+    void RetryLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        DataHolder.SetCoins(DataHolder.GetCoinsAtRoundStart());
+        SetShopActive(true);
+        Time.timeScale = 1.0f;
+    }
+
+    void ExtremeManaRegen()
+    {
+        foreach (GameObject ally in ally_list)
+        {
+            BasicEntity be = ally.GetComponent<BasicEntity>();
+            be.SetManaRegen(75);
+        }
     }
 }
