@@ -74,7 +74,6 @@ public class EntityBehavior : MonoBehaviour
             crown.SetActive(true);
             if (basicEntity.GetIsEnemy()) {
                 game_manager.SetEnemyKing(gameObject);
-                Debug.Log("Set Enemy King");
             }
         }
         else {
@@ -145,22 +144,23 @@ public class EntityBehavior : MonoBehaviour
 
     //Methods designed to find the different targets
     private (GameObject,float) getTargetEntity() {
+        entityBehavior = basicEntity.GetBehavior();
         if (entityBehavior == Entity.Behavior.Neutral) {
             return getClosestOponent(oponents_list);
         }
         else if (entityBehavior == Entity.Behavior.Offense) {
-            return getKingOf(oponents_list);
+            return getKingOf("enemies");
         }
         else if (entityBehavior == Entity.Behavior.Defense) {
-            return getClosestOponentOfKing(oponents_list, allies_list);
+            return getClosestOponentOfKing(oponents_list);
         }   
         else {
             throw new Exception("Entity doesn't have a valid Behavior");
         }
     }
-    private (GameObject,float) getClosestOponentOfKing(List<GameObject> oponents, List<GameObject> allies) {
+    private (GameObject,float) getClosestOponentOfKing(List<GameObject> oponents) {
         // A changer avec le gameManager
-        (GameObject allyKing, float kingDistance) = getKingOf(allies);
+        (GameObject allyKing, float kingDistance) = getKingOf("allies");
         EntityBehavior allyKingBehavior = allyKing.GetComponent<EntityBehavior>();
         // -----
         (GameObject allyKingClosestOponent, float oponentDistanceFromKing) = allyKingBehavior.getClosestOponent(oponents);
@@ -218,19 +218,31 @@ public class EntityBehavior : MonoBehaviour
     }
 
     // A déplacer dans GameManager
-    private (GameObject,float) getKingOf(List<GameObject> entities) {
+    private (GameObject,float) getKingOf(string team) {
         GameObject enemyKing;
-        if (basicEntity.GetIsEnemy()) {
-            enemyKing = game_manager.ally_king;
-        }
+        RefreshEntitiesLists();
+        if (team == "allies")
+            if (basicEntity.GetIsEnemy()) {
+                enemyKing = game_manager.enemy_king;
+            }
+            else {
+                enemyKing = game_manager.ally_king;
+            }
         else {
-            enemyKing = game_manager.enemy_king;
+            if (basicEntity.GetIsEnemy()) {
+                enemyKing = game_manager.ally_king;
+            }
+            else {
+                enemyKing = game_manager.enemy_king;
+            }
+            Debug.Log("FUCK");
         }
             
         float distance = Vector3.Distance(enemyKing.transform.position,transform.position);
         return (enemyKing, distance);
     }
 
+    public GameObject targetOponent;
     //Methods designed to dictate the actions of the Entity
     public void UpdateEntityMovement() {
         UpdateIsOnGround();
@@ -244,7 +256,7 @@ public class EntityBehavior : MonoBehaviour
         }
         else
         {
-            GameObject targetOponent;
+            //GameObject targetOponent;
             float distance;
 
             (targetOponent,distance) = getTargetEntity();
